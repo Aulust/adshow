@@ -18,6 +18,9 @@ Units.prototype.getUnit = function(unitId) {
 Units.prototype.load = function(data) {
     this.units = {};
 
+    console.log('Reload units:');
+    console.log(data);
+
     var types = {
         'image': ImageUnit,
         'html': HtmlUnit

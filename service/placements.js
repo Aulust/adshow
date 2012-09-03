@@ -26,6 +26,9 @@ Placements.prototype.getUnit = function(placementId) {
 Placements.prototype.load = function(data, units) {
     this.placements = {};
 
+    console.log('Reload placements:');
+    console.log(data);
+
     data.forEach(function(binding) {
         var unit = units.getUnit(binding.unit_name);
         if(unit) {
