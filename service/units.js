@@ -2,6 +2,7 @@ var ImageUnit = require('./units/image.js');
 var HtmlUnit = require('./units/html.js');
 
 var Units = function() {
+    this.units = {};
 };
 
 module.exports = Units;
