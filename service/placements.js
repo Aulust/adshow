@@ -1,4 +1,5 @@
 var Placements = function() {
+    this.placements = {};
 };
 
 module.exports = Placements;

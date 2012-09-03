@@ -9,36 +9,52 @@ var Engine = function(settings) {
     var dbSettings = settings['Database settings'];
     var serviceSettings = settings['Service Settings'];
 
-    this.connection = mysql.createConnection({
+    this.config = {
         host : dbSettings.dbhost,
         user : dbSettings.dbuser,
         password : dbSettings.dbpass,
         database: dbSettings.dbname,
         multipleStatements: true
-    });
+    };
+    this.connected = false;
 
-    this.connection.connect();
+    this.reconnect();
 
-    this.load();
-
-    var self = this;
-    setInterval(function() { self.load(); }, serviceSettings.dbrefresh, this);
+    setInterval(this.load.bind(this), serviceSettings.dbrefresh);
 };
 
 module.exports = Engine;
 
+Engine.prototype.reconnect = function() {
+    console.log('Something broke. Reconnect.');
+    this.connected = false;
+    this.connection = mysql.createConnection(this.config);
+    this.connection.connect(function(err) {
+        if(err) {
+            setTimeout(this.reconnect.bind(this), 10000);
+            return;
+        }
+
+        this.connected = true;
+        console.log('Connected.');
+    }.bind(this));
+};
+
 Engine.prototype.load = function() {
-    var self = this;
+    if(!this.connected) return;
 
     this.connection.query('START TRANSACTION;' +
                           'SELECT * FROM unit WHERE status="active";' +
                           'SELECT * FROM bindings;' +
                           'COMMIT;', function(err, result) {
-        if (err) throw err;
+        if (err && err.fatal) {
+            this.reconnect();
+            return;
+        }
 
-        self.units.load(result[1]);
-        self.placements.load(result[2], self.units);
-    });
+        this.units.load(result[1]);
+        this.placements.load(result[2], this.units);
+    }.bind(this));
 };
 
 Engine.prototype.getCode = function(placementId) {
