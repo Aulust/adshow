@@ -37,6 +37,7 @@ Engine.prototype.reconnect = function() {
 
         this.connected = true;
         console.log('Connected.');
+        this.load();
     }.bind(this));
 };
 
