@@ -89,7 +89,7 @@ $app->post('/placements/:name/edit', function ($name) use($app, $placementDao, $
     }
 
     $placement->title = isset($_POST['title']) ? $_POST['title'] : '';
-    $showingUnitNames = isset($_POST['unit']) ? $_POST['unit'] : null;
+    $showingUnitNames = isset($_POST['unit']) ? $_POST['unit'] : array();
 
     $token = isset($_POST['token']) ? $_POST['token'] : '';
 
