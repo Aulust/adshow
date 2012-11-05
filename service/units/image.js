@@ -1,4 +1,4 @@
-var CODE = '<a href="{url}" target="_blank" type="%s" style="text-align: center;"><img src="%s" alt="%s"/></a>';
+var CODE = '<a href="{url}" target="_blank" type="%s" style="display: block; text-align: center;"><img src="%s" alt="%s"/></a>';
 
 var util = require('util');
 
