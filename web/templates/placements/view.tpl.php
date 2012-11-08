@@ -13,6 +13,7 @@
         <th>Name</th>
         <th>Title</th>
         <th>Type</th>
+        <th>Status</th>
         <th></th>
       </tr>
     </thead>
@@ -22,8 +23,9 @@
         <td><?= $showingUnit->name ?></td>
         <td><?= $showingUnit->title ?></td>
         <td><?= $showingUnit->type ?></td>
+        <td class="unit-<?= $showingUnit->status ?>"><?= $showingUnit->status ?></td>
         <td>
-          <a href="/units/<?= $showingUnit->name ?>" class="btn btn-mini"><i class="icon-play"></i>View</a>
+          <a href="/units/<?= $showingUnit->name ?>" class="btn btn-mini"><i class="icon-play"></i>Shows</a>
         </td>
       </tr>
       <? endforeach ?>

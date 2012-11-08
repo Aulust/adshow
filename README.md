@@ -63,9 +63,9 @@ Where "placement.name" is name of placement you created ‌in admin interface.
 TODO
 --------------------------------------
 
-1. Add missing javascript and image upload to admin interface.
-2. Store number of views and clicks for banners at database. Multuple node.js servers must be supported!
-3. Show views and clicks statistics at admin interface for eatch unit.
++-1. Add missing javascript and image upload to admin interface.
++2. Store number of views and clicks for banners at database. Multuple node.js servers must be supported!
++3. Show views and clicks statistics at admin interface for eatch unit.
 4. Load units through ajax(jsonp) as alternative to iframe.
-5. More configurable units show conditions, like time periods, views limit, etc.
++5. More configurable units show conditions, like time periods, views limit, etc.
 

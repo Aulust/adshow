@@ -29,6 +29,7 @@
               <th>Name</th>
               <th>Title</th>
               <th>Type</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -41,6 +42,7 @@
               <td><?= $unit->name ?></td>
               <td><?= $unit->title ?></td>
               <td><?= $unit->type ?></td>
+              <td class="unit-<?= $unit->status ?>"><?= $unit->status ?></td>
             </tr>
             <? endforeach ?>
           </tbody>

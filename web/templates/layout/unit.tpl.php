@@ -4,7 +4,8 @@
 
   <body>
     <? include 'navbar.tpl.php' ?>
-
+	
+    <? include 'scripts.tpl.php' ?>
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
@@ -35,6 +36,5 @@
 
     </div>
 
-    <? include 'scripts.tpl.php' ?>
   </body>
 </html>

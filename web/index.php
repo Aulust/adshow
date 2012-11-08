@@ -7,19 +7,25 @@ require 'app/lib/LayoutView.php';
 require 'app/model/Unit.php';
 require 'app/model/Placement.php';
 require 'app/dao/UnitDao.php';
+require 'app/dao/StatisticDao.php';
 require 'app/dao/PlacementDao.php';
 require 'app/dao/BindingDao.php';
+require 'app/service/ConfigService.php';
 require 'app/service/DatabaseService.php';
 require 'app/service/UnitErrors.php';
 require 'app/service/PlacementErrors.php';
 require 'app/service/ValidationService.php';
 require 'app/service/PermissionsService.php';
+require 'app/service/ImageService.php';
 
-$databaseService = new DatabaseService();
+$configService = new ConfigService();
+$imageService = new ImageService($configService->getConfig());
+$databaseService = new DatabaseService($configService->getConfig());
 $validationService = new ValidationService();
 $permissionsService = new PermissionsService();
 
-$unitDao = new UnitDao($databaseService->getConnection());
+$unitDao = new UnitDao($databaseService->getConnection(), $configService->getConfig());
+$statisticDao = new StatisticDao($databaseService->getConnection());
 $placementDao = new PlacementDao($databaseService->getConnection());
 $bindingDao = new BindingDao($databaseService->getConnection());
 
@@ -36,6 +42,7 @@ $app->add(new Slim_Middleware_SessionCookie(array(
 require 'app/controllers/main.php';
 require 'app/controllers/units.php';
 require 'app/controllers/placements.php';
+require 'app/controllers/statistics.php';
 
 $databaseService->beginTransaction();
 $app->run();

@@ -16,3 +16,15 @@
 .center-content {
   text-align: center;
 }
+
+.unit-inactive {
+    color: #b94a48;
+}
+
+.unit-active {
+    color: #4abd48
+}
+
+.unit-delete {
+    color: #4abd48
+}
