@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+var imageServer='http://adshow.local';
 var Engine = require('./engine.js');
 var iframeTemplate = require('./iframe.js');
 
@@ -38,7 +39,6 @@ var parseConfig = function(data) {
 
 var settings = parseConfig(fs.readFileSync('../config/config', 'utf8'));
 var serviceSettings = settings['Service Settings'];
-
 var engine = new Engine(settings);
 
 var notFound = function(res) {
@@ -46,25 +46,33 @@ var notFound = function(res) {
     res.end(iframeTemplate.replace('{data}', ''));
 };
 
+var showDefaultImage = function(res) {
+	var defaultImage='<img src="'+imageServer+'/img/defaultimage.jpg" alt="sc2tv.ru"/>';
+	res.writeHead(200, {
+	'Content-Type': 'text/html'
+	});
+	res.end(iframeTemplate.replace('{data}', defaultImage));
+};
+
 var routers = [
     {'pattern': /\/show\/([a-zA-Z0-9.]+)/, 'controller': function(res, placementId) {
         var result = engine.getCode(placementId);
-
         if(result) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
-            res.end(iframeTemplate.replace('{data}', result));
+            res.end(iframeTemplate.replace('{data}', result[0]));
+			engine.connection.query("UPDATE `unit` SET `shows`=`shows`+1 WHERE `unit_name`='"+result[1]+"'");
         } else {
-            notFound(res);
+            showDefaultImage(res);
         }
     }},
     {'pattern': /\/click\/([a-zA-Z0-9.]+)/, 'controller': function(res, unitId) {
         var result = engine.getLink(unitId);
-
         if(result) {
-            res.writeHead(301, {'Location': result});
+            res.writeHead(301, {'Location': result[0]});
             res.end();
+			engine.connection.query("UPDATE `unit` SET `clicks`=`clicks`+1 WHERE `unit_name`='"+result[1]+"'");
         } else {
             notFound(res);
         }

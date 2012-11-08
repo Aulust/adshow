@@ -11,10 +11,19 @@ class ValidationService {
         $errors->type = !$this->checkType($unit->type);
         $errors->title = !$this->checkTitle($unit->title);
         $errors->weight = !$this->checkWeight($unit->weight);
-        $errors->link = !$this->checkLink($unit->link);
-
+        if($unit->type=='image'){
+		$errors->link = !$this->checkLink($unit->link);
         $errors->imageUrl = !$this->checkImageUrl($unit->imageUrl);
+		$errors->html = false;
+		}
+		else if($unit->type=='html'){
+		$errors->link = false;
+        $errors->imageUrl = false;
         $errors->html = !$this->checkHtml($unit->html);
+		}
+		$errors->clicks_limit = !$this->checkClicksLimit($unit->clicks_limit);
+		$errors->views_limit = !$this->checkViewsLimit($unit->views_limit);
+		$errors->time_limit = !$this->checkTimeLimit($unit->time_limit);
 
         $errors->token = !$this->checkToken(ValidationService::UNIT_FORM_TOKEN_NAME, $token);
 
@@ -53,8 +62,20 @@ class ValidationService {
         return $weight != '' && filter_var($weight, FILTER_VALIDATE_INT) != false && $weight >= 1 && $weight <= 100;
     }
 
+     public function checkClicksLimit($clicks_limit) {
+        return $clicks_limit != '' && filter_var($clicks_limit, FILTER_VALIDATE_INT) !== false && $clicks_limit >= 0;
+    }
+
+     public function checkViewsLimit($views_limit) {
+        return $views_limit != '' && filter_var($views_limit, FILTER_VALIDATE_INT) !== false && $views_limit >= 0;
+    }
+
+    public function checkTimeLimit($time_limit) {
+        return $time_limit != false;
+    }
+
     public function checkImageUrl($url) {
-        return $url != '' && filter_var($url, FILTER_VALIDATE_URL) != false;
+        return $_FILES['imageUrl']['error']==0;;
     }
 
     public function checkHtml($html) {

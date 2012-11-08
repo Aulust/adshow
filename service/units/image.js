@@ -11,7 +11,7 @@ var Image = function(data) {
 };
 
 module.exports = Image;
-
 Image.prototype.getCode = function() {
-    return util.format(CODE, this.name, this.imageUrl, this.name);
+imageServer='http://adshow.local';
+    return util.format(CODE, this.name, imageServer + this.imageUrl, this.name);
 };

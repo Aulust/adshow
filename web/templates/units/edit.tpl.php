@@ -1,5 +1,5 @@
 <div class="row-fluid">
-  <form class="form-horizontal" method="post">
+  <form class="form-horizontal" method="post" enctype="multipart/form-data">
     <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
     <fieldset>
@@ -16,9 +16,9 @@
         <div class="control-group <?= isset($errors) && $errors->type ? 'error' : '' ?>">
           <label for="type" class="control-label">Unit type</label>
           <div class="controls">
-            <select name="type" id="type">
+            <select onChange="changeUnitType(this.value);" name="type" id="type">
               <option value="image" selected="selected">Image unit</option>
-              <option value="html" selected="">Html unit</option>
+              <option value="html">Html unit</option>
             </select>
             <p class="help-block">Unit type. Can't be changed.</p>
           </div>
@@ -38,7 +38,29 @@
           <p class="help-block">Unit weight. Number between 1 and 100.</p>
         </div>
       </div>
-      <div class="control-group <?= isset($errors) && $errors->link ? 'error' : '' ?>">
+      <div class="control-group <?= isset($errors) && $errors->views_limit ? 'error' : '' ?>">
+        <label for="title" class="control-label">Views limit</label>
+        <div class="controls">
+          <input type="text" name="views_limit" id="views_limit" class="input-xlarge" value="<?= htmlspecialchars($unit->views_limit) ?>">
+          <p class="help-block">Views  limit.</p>
+        </div>
+      </div>
+      <div class="control-group <?= isset($errors) && $errors->clicks_limit ? 'error' : '' ?>">
+        <label for="title" class="control-label">Clicks limit</label>
+        <div class="controls">
+          <input type="text" name="clicks_limit" id="clicks_limit" class="input-xlarge" value="<?= htmlspecialchars($unit->clicks_limit) ?>">
+          <p class="help-block">Clicks limit.</p>
+        </div>
+      </div>
+      <div class="control-group <?= isset($errors) && $errors->time_limit ? 'error' : '' ?>">
+        <label for="title" class="control-label">Time limit</label>
+        <div class="controls">
+          <input type="text" name="time_limit" id="time_limit" class="input-xlarge" value="<?= htmlspecialchars($unit->time_limit) ?>">
+          <p class="help-block">Time limit.</p>
+        </div>
+      </div>
+	  
+      <div id="unit_link_div" <?= $unit->type == 'html' ? 'style="display:none;"' : '' ?> class="control-group <?= isset($errors) && $errors->link ? 'error' : '' ?>">
         <label for="link" class="control-label">Link</label>
         <div class="controls">
           <input type="text" name="link" id="link" class="input-xlarge" value="<?= htmlspecialchars($unit->link) ?>">
@@ -46,14 +68,15 @@
         </div>
       </div>
       <hr/>
-      <div class="control-group <?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
-        <label for="imageUrl" class="control-label">Image url</label>
+      <div id="unit_image_div" <?= $unit->type == 'html' ? 'style="display:none;"' : '' ?> class="control-group <?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
+        <label for="imageUrl" class="control-label">Image file</label>
         <div class="controls">
-          <input type="text" name="imageUrl" id="imageUrl" class="input-xlarge" value="<?= htmlspecialchars($unit->imageUrl) ?>">
-          <p class="help-block">Url for unit image.</p>
+          <input type="file" name="imageUrl" id="imageUrl" class="input-xlarge">
+          <p class="help-block">Unit image.</p>
         </div>
       </div>
-      <div class="control-group <?= isset($errors) && $errors->html ? 'error' : '' ?>">
+	  
+      <div id="unit_html_div" <?= $unit->type == 'image' ||  $action === 'create'? 'style="display:none;"' : '' ?> class="control-group <?= isset($errors) && $errors->html ? 'error' : '' ?>">
         <label for="html" class="control-label">Html code</label>
         <div class="controls">
           <textarea rows="3" name="html" id="html" class="input-xlarge"><?= htmlspecialchars($unit->html) ?></textarea>
@@ -66,3 +89,8 @@
     </fieldset>
   </form>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+$('#time_limit').simpleDatepicker();
+});
+</script>

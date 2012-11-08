@@ -6,12 +6,13 @@ $app->get('/units', function () use($app, $unitDao, $permissionsService) {
     }
 
     $availableUnits = $unitDao->getAll();
+    $notavailableUnits = $unitDao->getInActive();
     if($availableUnits === null) {
         $app->error();
     }
 
     LayoutView::set_layout('layout/unit.tpl.php');
-    $app->render('units/units.tpl.php', array('availableUnits' => $availableUnits));
+    $app->render('units/units.tpl.php', array('availableUnits' => $availableUnits,'notavailableUnits' => $notavailableUnits));
 });
 
 $app->get('/units/:name', function ($name) use($app, $unitDao, $validationService, $permissionsService) {
@@ -63,6 +64,9 @@ $app->post('/add/unit', function () use($app, $unitDao, $validationService, $per
     $unit->type = isset($_POST['type']) ? $_POST['type'] : '';
     $unit->title = isset($_POST['title']) ? $_POST['title'] : '';
     $unit->weight = isset($_POST['weight']) ? $_POST['weight'] : 0;
+    $unit->views_limit = isset($_POST['views_limit']) ? $_POST['views_limit'] : 0;
+    $unit->clicks_limit = isset($_POST['clicks_limit']) ? $_POST['clicks_limit'] : 0;
+    $unit->time_limit = $_POST['time_limit']>'0000-00-00' ? date('Y-m-d',strtotime($_POST['time_limit'])) : '0000-00-00';
     $unit->link = isset($_POST['link']) ? $_POST['link'] : '';
     $unit->imageUrl = isset($_POST['imageUrl']) ? $_POST['imageUrl'] : '';
     $unit->html = isset($_POST['html']) ? $_POST['html'] : '';
@@ -70,7 +74,6 @@ $app->post('/add/unit', function () use($app, $unitDao, $validationService, $per
     $token = isset($_POST['token']) ? $_POST['token'] : '';
 
     $errors = $validationService->validateUnit($unit, $token);
-
     if($errors->hasErrors()) {
         $availableUnits = $unitDao->getAll();
         if($availableUnits === null) {
@@ -85,6 +88,12 @@ $app->post('/add/unit', function () use($app, $unitDao, $validationService, $per
     } else {
         $unit->setDefaultNotUsed();
         if($unitDao->insert($unit)) {
+//------- UPLOAD IMAGE
+$uploaddir = './img/adv/';
+$uploadfile = $uploaddir . $unit->name.'.'.pathinfo($_FILES['imageUrl']['name'], PATHINFO_EXTENSION);
+move_uploaded_file($_FILES['imageUrl']['tmp_name'], $uploadfile);
+
+//-------		
             $app->redirect('/units/' . $unit->name);
         } else {
             $app->error();
@@ -129,6 +138,9 @@ $app->post('/units/:name/edit', function ($name) use($app, $unitDao, $validation
     $unit->title = isset($_POST['title']) ? $_POST['title'] : '';
     $unit->weight = isset($_POST['weight']) ? $_POST['weight'] : 0;
     $unit->link = isset($_POST['link']) ? $_POST['link'] : '';
+    $unit->views_limit = isset($_POST['views_limit']) ? $_POST['views_limit'] : 0;
+    $unit->clicks_limit = isset($_POST['clicks_limit']) ? $_POST['clicks_limit'] : 0;
+    $unit->time_limit = $_POST['time_limit']>'0000-00-00' ? date('Y-m-d',strtotime($_POST['time_limit'])) : '0000-00-00';
     $unit->imageUrl = isset($_POST['imageUrl']) ? $_POST['imageUrl'] : '';
     $unit->html = isset($_POST['html']) ? $_POST['html'] : '';
 
@@ -205,6 +217,61 @@ $app->post('/units/:name/delete', function ($name) use($app, $unitDao, $bindingD
             'errors' => '', 'token' => $token));
     } else {
         if($unitDao->delete($unit) && $bindingDao->deleteByUnit($unit)) {
+            $app->redirect('/units');
+        } else {
+            $app->error();
+        }
+    }
+});
+
+$app->get('/units/:name/activate', function ($name) use($app, $unitDao, $validationService, $permissionsService) {
+    if(!$validationService->checkName($name) || !$permissionsService->checkPermission('view units') ||
+       !$permissionsService->checkPermission('delete unit')) {
+       $app->notFound();
+    }
+
+    $unit = $unitDao->get($name);
+    if($unit === null) {
+        $app->notFound();
+    }
+
+    $availableUnits = $unitDao->getAll();
+    if($availableUnits === null) {
+        $app->error();
+    }
+
+    $token = $validationService->generateToken(ValidationService::UNIT_FORM_TOKEN_NAME);
+
+    LayoutView::set_layout('layout/unit.tpl.php');
+    $app->render('units/activate.tpl.php', array('availableUnits' => $availableUnits, 'unit' => $unit, 'token' => $token));
+});
+
+$app->post('/units/:name/activate', function ($name) use($app, $unitDao, $bindingDao, $validationService, $permissionsService) {
+    if(!$validationService->checkName($name) || !$permissionsService->checkPermission('view units') ||
+       !$permissionsService->checkPermission('delete unit')) {
+       $app->notFound();
+    }
+
+    $unit = $unitDao->get($name);
+    if($unit === null) {
+        $app->notFound();
+    }
+
+    $token = isset($_POST['token']) ? $_POST['token'] : '';
+
+    if(!$validationService->checkToken(ValidationService::UNIT_FORM_TOKEN_NAME, $token)) {
+        $availableUnits = $unitDao->getAll();
+        if($availableUnits === null) {
+            $app->error();
+        }
+
+        $token = $validationService->generateToken(ValidationService::UNIT_FORM_TOKEN_NAME);
+
+        LayoutView::set_layout('layout/unit.tpl.php');
+        $app->render('units/activate.tpl.php', array('availableUnits' => $availableUnits, 'unit' => $unit,
+            'errors' => '', 'token' => $token));
+    } else {
+        if($unitDao->activate($unit)) {
             $app->redirect('/units');
         } else {
             $app->error();
