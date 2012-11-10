@@ -62,7 +62,7 @@ class UnitDao {
     public function update($unit) {
         try {
             $sth = $this->dbh->prepare('UPDATE unit SET title = :title, weight = :weight, views_limit = :views_limit, clicks_limit = :clicks_limit, time_limit = :time_limit, link = :link,
-                                        html = :html WHERE unit_name = :name');
+                                        html = :html, image_url = :image_url WHERE unit_name = :name');
 
             $sth->bindParam(':title', $unit->title, PDO::PARAM_STR);
             $sth->bindParam(':weight', $unit->weight, PDO::PARAM_INT);
@@ -70,19 +70,14 @@ class UnitDao {
             $sth->bindParam(':clicks_limit', $unit->clicks_limit, PDO::PARAM_INT);
             $sth->bindParam(':time_limit', $unit->time_limit, PDO::PARAM_STR);
             $sth->bindParam(':link', $unit->link, PDO::PARAM_STR);
+            $sth->bindParam(':image_url', $unit->imageUrl, PDO::PARAM_STR);
             $sth->bindParam(':html', $unit->html, PDO::PARAM_STR);
             $sth->bindParam(':name', $unit->name, PDO::PARAM_STR);
             $sth->execute();
         } catch(PDOException $e) {
             return false;
         }
-//------- UPLOAD IMAGE
-$uploaddir = '/img/adv/';
-$uploadfile = $uploaddir . $unit->name.'.'.pathinfo($_FILES['imageUrl']['name'], PATHINFO_EXTENSION);
-if(move_uploaded_file($_FILES['imageUrl']['tmp_name'], '.'.$uploadfile)==true){
-            $sth = $this->dbh->prepare('UPDATE unit SET image_url="'.$uploadfile.'" WHERE `unit_name`="'.$unit->name.'"');
-            $sth->execute();}
-//-------	
+		$this->uploadImage($unit);
         return true;
     }
 
@@ -105,13 +100,7 @@ if(move_uploaded_file($_FILES['imageUrl']['tmp_name'], '.'.$uploadfile)==true){
         } catch(PDOException $e) {
             return false;
         }
-//------- UPLOAD IMAGE
-$uploaddir = '/img/adv/';
-$uploadfile = $uploaddir . $unit->name.'.'.pathinfo($_FILES['imageUrl']['name'], PATHINFO_EXTENSION);
-move_uploaded_file($_FILES['imageUrl']['tmp_name'], '.'.$uploadfile);
-            $sth = $this->dbh->prepare('UPDATE unit SET image_url="'.$uploadfile.'" WHERE `unit_name`="'.$unit->name.'"');
-            $sth->execute();
-//-------	
+		$this->uploadImage($unit);
         return true;
     }
 
@@ -138,5 +127,16 @@ move_uploaded_file($_FILES['imageUrl']['tmp_name'], '.'.$uploadfile);
         }
 
         return true;
+    }
+    public function uploadImage($unit) {
+	if(isset($_FILES['imageUrl'])) {
+		$config = parse_ini_file('../config/config');
+		$uploaddir = $config['uploadDir'];
+		$uploadfile = $uploaddir . $unit->name.'.'.pathinfo($_FILES['imageUrl']['name'], PATHINFO_EXTENSION);
+		move_uploaded_file($_FILES['imageUrl']['tmp_name'], '.'.$uploadfile);
+        $sth = $this->dbh->prepare('UPDATE unit SET image_url="'.$uploadfile.'" WHERE `unit_name`="'.$unit->name.'"');
+        $sth->execute();
+        return true;
+		}
     }
 }

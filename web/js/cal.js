@@ -305,3 +305,7 @@
 	};
 
 })(jQuery);
+
+$(document).ready(function(){
+$('#time_limit').simpleDatepicker();
+});

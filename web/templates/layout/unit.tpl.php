@@ -4,6 +4,7 @@
 
   <body>
     <? include 'navbar.tpl.php' ?>
+	
     <? include 'scripts.tpl.php' ?>
     <div class="container-fluid">
       <div class="row-fluid">

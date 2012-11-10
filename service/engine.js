@@ -19,7 +19,6 @@ var Engine = function(settings) {
     this.connected = false;
 
     this.reconnect();
-this.load();
     setInterval(this.load.bind(this), serviceSettings.dbrefresh);
 };
 
@@ -27,11 +26,20 @@ module.exports = Engine;
 
 Engine.prototype.reconnect = function() {
     console.log('Something broke. Reconnect.');
-    this.connected = false;
+    this.connected = true;
     this.connection = mysql.createClient(this.config);
-
-        this.connected = true;
-        console.log('Connected.');
+	this.connected = true;
+	this.load();
+	/*this.connection.connected always false, why?
+	if(this.connection.connected==false) {
+	    setTimeout(this.reconnect.bind(this), 10000);
+        return;
+	}
+	else {
+		this.connected = true;
+		console.log('Connected.');
+		this.load();
+	}*/
 
 };
 
@@ -44,14 +52,8 @@ Engine.prototype.load = function() {
             return;
         }
     }.bind(this));	
-	today=new Date();
-	nowDate=today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate()
-    this.connection.query('UPDATE `unit` SET `status`="delete" WHERE (`clicks`>=`clicks_limit` AND `clicks_limit`>0) OR (`shows`>=`views_limit` AND `views_limit`>0) OR (`time_limit`<"'+nowDate+'" AND `time_limit`<>"0000-00-00");', function(err, result) {
-        if (err && err.fatal) {
-            this.reconnect();
-            return;
-        }
-    }.bind(this));	
+	
+	this.units.deleteOverLimit(this);
 
     this.connection.query('SELECT * FROM unit WHERE status="active" AND ((views_limit>0 AND views_limit>shows) OR views_limit=0) AND ((clicks_limit>0 AND clicks_limit>clicks) OR clicks_limit=0);', function(err, result) {
         if (err && err.fatal) {
@@ -78,16 +80,21 @@ Engine.prototype.load = function() {
 	
 };
 
-Engine.prototype.getCode = function(placementId) {
+Engine.prototype.getCodeAndName = function(placementId, imageServer) {
     var unit = this.placements.getUnit(placementId);
     if(unit) {
-        return ([unit.getCode().replace('{url}', '/click/' + unit.name + '?'+Math.floor(Math.random()*(10000))),unit.name]);
+        return {'code': unit.getCode(imageServer).replace('{url}', '/click/' + unit.name + '?rand='+new Date().getTime()), 'name': unit.name};
     }
 };
 
-Engine.prototype.getLink = function(unitId) {
+Engine.prototype.getLinkAndName = function(unitId) {
     var unit = this.units.getUnit(unitId);
     if(unit) {
-        return [unit.link,unit.name];
+        return {'link': unit.link, 'name': unit.name};
     }
+};
+
+Engine.prototype.getDefaultImage = function(res, imageServer) {
+	var defaultImage='<img src="'+imageServer+'/img/defaultimage.jpg" alt="sc2tv.ru"/>';
+	return defaultImage;
 };

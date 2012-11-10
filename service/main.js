@@ -1,7 +1,7 @@
 var http = require('http');
 var fs = require('fs');
-var imageServer='http://adshow.local';
 var Engine = require('./engine.js');
+var Units = require('./units.js');
 var iframeTemplate = require('./iframe.js');
 
 var regex = {
@@ -39,40 +39,38 @@ var parseConfig = function(data) {
 
 var settings = parseConfig(fs.readFileSync('../config/config', 'utf8'));
 var serviceSettings = settings['Service Settings'];
+var imageServerSettings = settings['Image Server'];
 var engine = new Engine(settings);
+var units = new Units(settings);
 
 var notFound = function(res) {
     res.writeHead(404, {'Content-Type': 'text/html'});
     res.end(iframeTemplate.replace('{data}', ''));
 };
 
-var showDefaultImage = function(res) {
-	var defaultImage='<img src="'+imageServer+'/img/defaultimage.jpg" alt="sc2tv.ru"/>';
-	res.writeHead(200, {
-	'Content-Type': 'text/html'
-	});
-	res.end(iframeTemplate.replace('{data}', defaultImage));
-};
-
 var routers = [
     {'pattern': /\/show\/([a-zA-Z0-9.]+)/, 'controller': function(res, placementId) {
-        var result = engine.getCode(placementId);
+        var result = engine.getCodeAndName(placementId, imageServerSettings.imageServer);
         if(result) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
-            res.end(iframeTemplate.replace('{data}', result[0]));
-			engine.connection.query("UPDATE `unit` SET `shows`=`shows`+1 WHERE `unit_name`='"+result[1]+"'");
+            res.end(iframeTemplate.replace('{data}', result.code));
+			units.updateShows(result.name, engine);
         } else {
-            showDefaultImage(res);
+            defaultImage = engine.getDefaultImage(res, imageServerSettings.imageServer);
+			res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            res.end(iframeTemplate.replace('{data}', defaultImage));
         }
     }},
     {'pattern': /\/click\/([a-zA-Z0-9.]+)/, 'controller': function(res, unitId) {
-        var result = engine.getLink(unitId);
+        var result = engine.getLinkAndName(unitId);
         if(result) {
-            res.writeHead(301, {'Location': result[0]});
+            res.writeHead(301, {'Location': result.link});
             res.end();
-			engine.connection.query("UPDATE `unit` SET `clicks`=`clicks`+1 WHERE `unit_name`='"+result[1]+"'");
+			units.updateClicks(result.name, engine);
         } else {
             notFound(res);
         }

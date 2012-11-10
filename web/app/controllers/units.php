@@ -88,12 +88,7 @@ $app->post('/add/unit', function () use($app, $unitDao, $validationService, $per
     } else {
         $unit->setDefaultNotUsed();
         if($unitDao->insert($unit)) {
-//------- UPLOAD IMAGE
-$uploaddir = './img/adv/';
-$uploadfile = $uploaddir . $unit->name.'.'.pathinfo($_FILES['imageUrl']['name'], PATHINFO_EXTENSION);
-move_uploaded_file($_FILES['imageUrl']['tmp_name'], $uploadfile);
-
-//-------		
+			$unitDao->uploadImage($unit);
             $app->redirect('/units/' . $unit->name);
         } else {
             $app->error();

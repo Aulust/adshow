@@ -60,7 +60,7 @@
         </div>
       </div>
 	  
-      <div id="unit_link_div" <?= $unit->type == 'html' ? 'style="display:none;"' : '' ?> class="control-group <?= isset($errors) && $errors->link ? 'error' : '' ?>">
+      <div id="unit_link_div" class="control-group <?= $unit->type == 'html' ? 'hidden ' : 'show ' ?><?= isset($errors) && $errors->link ? 'error' : '' ?>">
         <label for="link" class="control-label">Link</label>
         <div class="controls">
           <input type="text" name="link" id="link" class="input-xlarge" value="<?= htmlspecialchars($unit->link) ?>">
@@ -68,15 +68,16 @@
         </div>
       </div>
       <hr/>
-      <div id="unit_image_div" <?= $unit->type == 'html' ? 'style="display:none;"' : '' ?> class="control-group <?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
+      <div id="unit_image_div" class="control-group <?= $unit->type == 'html' ? 'hidden ' : 'show ' ?><?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
         <label for="imageUrl" class="control-label">Image file</label>
         <div class="controls">
           <input type="file" name="imageUrl" id="imageUrl" class="input-xlarge">
-          <p class="help-block">Unit image.</p>
+		  <input type="button" onclick="changeImageUploadType();" value="Change type">
+          <p class="help-block">Unit image. Upload file or type full url link to image.</p>
         </div>
       </div>
 	  
-      <div id="unit_html_div" <?= $unit->type == 'image' ||  $action === 'create'? 'style="display:none;"' : '' ?> class="control-group <?= isset($errors) && $errors->html ? 'error' : '' ?>">
+      <div id="unit_html_div" class="control-group <?= $unit->type == 'image' ||  $action === 'create'? 'hidden ' : 'show ' ?><?= isset($errors) && $errors->html ? 'error' : '' ?>">
         <label for="html" class="control-label">Html code</label>
         <div class="controls">
           <textarea rows="3" name="html" id="html" class="input-xlarge"><?= htmlspecialchars($unit->html) ?></textarea>
@@ -89,8 +90,3 @@
     </fieldset>
   </form>
 </div>
-<script type="text/javascript">
-$(document).ready(function(){
-$('#time_limit').simpleDatepicker();
-});
-</script>
