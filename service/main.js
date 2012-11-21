@@ -63,14 +63,13 @@ var routers = [
             res.end(iframeTemplate.replace('{data}', result.code));
 			statistics.updateShows(result.name);
         } else {
-            defaultImage = engine.getDefaultImage(res, imageServerSettings.imageServer);
 			res.writeHead(200, {
                 'Content-Type': 'text/html',
                 'Expires': 'Thu, 19 Nov 1981 08:52:00 GMT',
                 'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
                 'Pragma': 'no-cache'
             });
-            res.end(iframeTemplate.replace('{data}', defaultImage));
+            res.end();
         }
     }},
     {'pattern': /\/click\/([a-zA-Z0-9.]+)/, 'controller': function(res, unitId) {
