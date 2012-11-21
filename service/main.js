@@ -2,6 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var Engine = require('./engine.js');
 var Units = require('./units.js');
+var Statistics = require('./statistics.js');
 var iframeTemplate = require('./iframe.js');
 
 var regex = {
@@ -42,6 +43,7 @@ var serviceSettings = settings['Service Settings'];
 var imageServerSettings = settings['Image Server'];
 var engine = new Engine(settings);
 var units = new Units(settings);
+var statistics = new Statistics(settings, engine);
 
 var notFound = function(res) {
     res.writeHead(404, {'Content-Type': 'text/html'});
@@ -53,14 +55,20 @@ var routers = [
         var result = engine.getCodeAndName(placementId, imageServerSettings.imageServer);
         if(result) {
             res.writeHead(200, {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/html',
+                'Expires': 'Thu, 19 Nov 1981 08:52:00 GMT',
+                'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+                'Pragma': 'no-cache'
             });
             res.end(iframeTemplate.replace('{data}', result.code));
-			units.updateShows(result.name, engine);
+			statistics.updateShows(result.name);
         } else {
             defaultImage = engine.getDefaultImage(res, imageServerSettings.imageServer);
 			res.writeHead(200, {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/html',
+                'Expires': 'Thu, 19 Nov 1981 08:52:00 GMT',
+                'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+                'Pragma': 'no-cache'
             });
             res.end(iframeTemplate.replace('{data}', defaultImage));
         }
@@ -70,7 +78,7 @@ var routers = [
         if(result) {
             res.writeHead(301, {'Location': result.link});
             res.end();
-			units.updateClicks(result.name, engine);
+			statistics.updateClicks(result.name);
         } else {
             notFound(res);
         }

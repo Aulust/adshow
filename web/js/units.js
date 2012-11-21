@@ -1,7 +1,7 @@
 function changeUnitType(value) {
-		$('#unit_image_div').toggleClass('hidden show');
-		$('#unit_link_div').toggleClass('hidden show');
-		$('#unit_html_div').toggleClass('show hidden');
+		$('#unit_image_div').toggleClass('hidden');
+		$('#unit_link_div').toggleClass('hidden');
+		$('#unit_html_div').toggleClass('hidden');
 
 }
 

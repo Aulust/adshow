@@ -8,12 +8,13 @@ var Image = function(data) {
     this.weight = data.weight;
     this.link = data.link;
     this.imageUrl = data.image_url;
+    this.image_type = data.image_type;
 };
 
 module.exports = Image;
 Image.prototype.getCode = function(imageServer) {
-	if(this.imageUrl[0]=='/')
-		return util.format(CODE, this.name, imageServer + this.imageUrl, this.name);
-	else 
-		return util.format(CODE, this.name, this.imageUrl, this.name);
+    if(this.image_type == 'local')
+        return util.format(CODE, this.name, imageServer + this.imageUrl, this.name);
+    else 
+        return util.format(CODE, this.name, this.imageUrl, this.name);
 };

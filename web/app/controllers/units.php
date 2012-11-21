@@ -64,17 +64,22 @@ $app->post('/add/unit', function () use($app, $unitDao, $validationService, $per
     $unit->type = isset($_POST['type']) ? $_POST['type'] : '';
     $unit->title = isset($_POST['title']) ? $_POST['title'] : '';
     $unit->weight = isset($_POST['weight']) ? $_POST['weight'] : 0;
-    $unit->views_limit = isset($_POST['views_limit']) ? $_POST['views_limit'] : 0;
-    $unit->clicks_limit = isset($_POST['clicks_limit']) ? $_POST['clicks_limit'] : 0;
-    $unit->time_limit = $_POST['time_limit']>'0000-00-00' ? date('Y-m-d',strtotime($_POST['time_limit'])) : '0000-00-00';
+    $unit->shows_limit = (int)$_POST['shows_limit'] > 0 ? $_POST['shows_limit'] : NULL;
+    $unit->clicks_limit = (int)$_POST['clicks_limit'] > 0 ? $_POST['clicks_limit'] : NULL;
+    $unit->time_limit = date('Y-m-d',strtotime($_POST['time_limit']));
+        if($unit->time_limit == '1970-01-01')$unit->time_limit = NULL;
     $unit->link = isset($_POST['link']) ? $_POST['link'] : '';
     $unit->imageUrl = isset($_POST['imageUrl']) ? $_POST['imageUrl'] : '';
+    if($unit->imageUrl)
+        $unit->image_type='remote';
+    else 
+        $unit->image_type='local';
     $unit->html = isset($_POST['html']) ? $_POST['html'] : '';
 
     $token = isset($_POST['token']) ? $_POST['token'] : '';
 
-    $errors = $validationService->validateUnit($unit, $token);
-    if($errors->hasErrors()) {
+    $errors = $validationService->validateUnit($unit, $token, 'insert');
+    if($errors->hasErrors($unit)) {
         $availableUnits = $unitDao->getAll();
         if($availableUnits === null) {
             $app->error();
@@ -88,7 +93,6 @@ $app->post('/add/unit', function () use($app, $unitDao, $validationService, $per
     } else {
         $unit->setDefaultNotUsed();
         if($unitDao->insert($unit)) {
-			$unitDao->uploadImage($unit);
             $app->redirect('/units/' . $unit->name);
         } else {
             $app->error();
@@ -133,17 +137,22 @@ $app->post('/units/:name/edit', function ($name) use($app, $unitDao, $validation
     $unit->title = isset($_POST['title']) ? $_POST['title'] : '';
     $unit->weight = isset($_POST['weight']) ? $_POST['weight'] : 0;
     $unit->link = isset($_POST['link']) ? $_POST['link'] : '';
-    $unit->views_limit = isset($_POST['views_limit']) ? $_POST['views_limit'] : 0;
-    $unit->clicks_limit = isset($_POST['clicks_limit']) ? $_POST['clicks_limit'] : 0;
-    $unit->time_limit = $_POST['time_limit']>'0000-00-00' ? date('Y-m-d',strtotime($_POST['time_limit'])) : '0000-00-00';
+    $unit->shows_limit = (int)$_POST['shows_limit'] > 0 ? $_POST['shows_limit'] : NULL;
+    $unit->clicks_limit = (int)$_POST['clicks_limit'] > 0 ? $_POST['clicks_limit'] : NULL;
+    $unit->time_limit = date('Y-m-d',strtotime($_POST['time_limit']));
+        if($unit->time_limit == '1970-01-01')$unit->time_limit = NULL;
     $unit->imageUrl = isset($_POST['imageUrl']) ? $_POST['imageUrl'] : '';
+    if($unit->imageUrl)
+        $unit->image_type='remote';
+    else 
+        $unit->image_type='local';
     $unit->html = isset($_POST['html']) ? $_POST['html'] : '';
 
     $token = isset($_POST['token']) ? $_POST['token'] : '';
+    
+    $errors = $validationService->validateUnit($unit, $token, 'update');
 
-    $errors = $validationService->validateUnit($unit, $token);
-
-    if($errors->hasErrors()) {
+    if($errors->hasErrors($unit)) {
         $availableUnits = $unitDao->getAll();
         if($availableUnits === null) {
             $app->error();

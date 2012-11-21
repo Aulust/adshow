@@ -9,9 +9,10 @@
         <th>Name</th>
         <th>Title</th>
         <th>Type</th>
-        <th>Views</th>
+        <th>Shows</th>
         <th>Clicks</th>
-        <th>time_limit</th>
+        <th>Time limit</th>
+        <th>Status</th>
         <th></th>
       </tr>
     </thead>
@@ -23,7 +24,8 @@
         <td><?= $availableUnit->type ?></td>
         <td><?= $availableUnit->shows ?></td>
         <td><?= $availableUnit->clicks ?></td>
-        <td><?= $availableUnit->time_limit ?></td>
+        <td><?= ($availableUnit->time_limit == null ? 'No' : $availableUnit->time_limit) ?></td>
+        <td class="unit-<?= $availableUnit->status ?>"><?= $availableUnit->status ?></td>
         <td>
           <a href="/units/<?= $availableUnit->name ?>" class="btn btn-mini"><i class="icon-play"></i>View</a>
           <a href="/units/<?= $availableUnit->name ?>/edit" class="btn btn-mini"><i class="icon-edit"></i>Edit</a>
@@ -35,7 +37,7 @@
   </table>
 </div>
 <div class="row-fluid">
-  <p>Inactive units</p>
+  <p>Deleted units</p>
 </div>
 <div class="row-fluid">
   <table class="table table-striped">
@@ -44,7 +46,7 @@
         <th>Name</th>
         <th>Title</th>
         <th>Type</th>
-        <th>Views</th>
+        <th>Shows</th>
         <th>Clicks</th>
         <th>time_limit</th>
         <th></th>
@@ -58,7 +60,7 @@
         <td><?= $availableUnit->type ?></td>
         <td><?= $availableUnit->shows ?></td>
         <td><?= $availableUnit->clicks ?></td>
-        <td><?= $availableUnit->time_limit ?></td>
+        <td><?= ($availableUnit->time_limit == null ? 'No' : $availableUnit->time_limit) ?></td>
         <td>
           <a href="/units/<?= $availableUnit->name ?>" class="btn btn-mini"><i class="icon-play"></i>View</a>
           <a href="/units/<?= $availableUnit->name ?>/edit" class="btn btn-mini"><i class="icon-edit"></i>Edit</a>

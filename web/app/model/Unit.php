@@ -5,7 +5,7 @@ class Unit {
     public $type;
     public $title;
     public $weight;
-    public $views_limit;
+    public $shows_limit;
     public $clicks_limit;
     public $time_limit;
     public $shows;
@@ -19,9 +19,9 @@ class Unit {
         $this->type = '';
         $this->title = '';
         $this->weight = 1;
-        $this->views_limit = 0;
-        $this->clicks_limit = 0;
-        $this->time_limit = '00-00-0000';
+        $this->shows_limit = null;
+        $this->clicks_limit = null;
+        $this->time_limit = null;
         $this->link = '';
         $this->imageUrl = null;
         $this->html = null;

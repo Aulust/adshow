@@ -5,7 +5,7 @@ class PermissionsService {
     static private $permissions = array('User' => array('view units', 'add unit', 'edit unit', 'delete unit',
                                                         'view placements', 'edit placement'),
                                         'Admin' => array('view units', 'add unit', 'edit unit', 'delete unit',
-                                                         'view placements', 'add placement', 'edit placement', 'delete placement')
+                                                         'view placements', 'add placement', 'edit placement', 'delete placement', 'view statistics')
                                         );
 
     public function __construct() {

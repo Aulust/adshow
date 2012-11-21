@@ -17,8 +17,8 @@
           <label for="type" class="control-label">Unit type</label>
           <div class="controls">
             <select onChange="changeUnitType(this.value);" name="type" id="type">
-              <option value="image" selected="selected">Image unit</option>
-              <option value="html">Html unit</option>
+              <option value="image">Image unit</option>
+              <option value="html" <?= $unit->type=='html' ? 'selected="selected"' : '' ?>>Html unit</option>
             </select>
             <p class="help-block">Unit type. Can't be changed.</p>
           </div>
@@ -38,11 +38,11 @@
           <p class="help-block">Unit weight. Number between 1 and 100.</p>
         </div>
       </div>
-      <div class="control-group <?= isset($errors) && $errors->views_limit ? 'error' : '' ?>">
-        <label for="title" class="control-label">Views limit</label>
+      <div class="control-group <?= isset($errors) && $errors->shows_limit ? 'error' : '' ?>">
+        <label for="title" class="control-label">Shows limit</label>
         <div class="controls">
-          <input type="text" name="views_limit" id="views_limit" class="input-xlarge" value="<?= htmlspecialchars($unit->views_limit) ?>">
-          <p class="help-block">Views  limit.</p>
+          <input type="text" name="shows_limit" id="shows_limit" class="input-xlarge" value="<?= htmlspecialchars($unit->shows_limit) ?>">
+          <p class="help-block">Shows  limit.</p>
         </div>
       </div>
       <div class="control-group <?= isset($errors) && $errors->clicks_limit ? 'error' : '' ?>">
@@ -60,7 +60,7 @@
         </div>
       </div>
 	  
-      <div id="unit_link_div" class="control-group <?= $unit->type == 'html' ? 'hidden ' : 'show ' ?><?= isset($errors) && $errors->link ? 'error' : '' ?>">
+      <div id="unit_link_div" class="control-group <?= $unit->type == 'html' ? 'hidden ' : '' ?><?= isset($errors) && $errors->link ? 'error' : '' ?>">
         <label for="link" class="control-label">Link</label>
         <div class="controls">
           <input type="text" name="link" id="link" class="input-xlarge" value="<?= htmlspecialchars($unit->link) ?>">
@@ -68,7 +68,7 @@
         </div>
       </div>
       <hr/>
-      <div id="unit_image_div" class="control-group <?= $unit->type == 'html' ? 'hidden ' : 'show ' ?><?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
+      <div id="unit_image_div" class="control-group <?= $unit->type == 'html' ? 'hidden ' : '' ?><?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
         <label for="imageUrl" class="control-label">Image file</label>
         <div class="controls">
           <input type="file" name="imageUrl" id="imageUrl" class="input-xlarge">
@@ -77,7 +77,7 @@
         </div>
       </div>
 	  
-      <div id="unit_html_div" class="control-group <?= $unit->type == 'image' ||  $action === 'create'? 'hidden ' : 'show ' ?><?= isset($errors) && $errors->html ? 'error' : '' ?>">
+      <div id="unit_html_div" class="control-group <?= ($unit->type == 'image' ||  ($action == 'create' && $unit->type==''))? 'hidden ' : '' ?><?= isset($errors) && $errors->html ? 'error' : '' ?>">
         <label for="html" class="control-label">Html code</label>
         <div class="controls">
           <textarea rows="3" name="html" id="html" class="input-xlarge"><?= htmlspecialchars($unit->html) ?></textarea>

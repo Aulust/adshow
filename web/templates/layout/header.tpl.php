@@ -18,6 +18,8 @@
   <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link href="/css/adshow.css" rel="stylesheet">
   <link href="/css/cal.css" rel="stylesheet">
+  <link href="/css/statistic.css" rel="stylesheet">
+  <link href="/css/jquery.jqplot.css" rel="stylesheet">
 
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>

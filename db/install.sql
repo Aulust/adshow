@@ -1,36 +1,9 @@
--- phpMyAdmin SQL Dump
--- version 3.2.3
--- http://www.phpmyadmin.net
---
--- Хост: localhost
--- Время создания: Ноя 08 2012 г., 20:48
--- Версия сервера: 5.1.40
--- Версия PHP: 5.3.18
-
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
---
--- База данных: `adshow`
---
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `bindings`
---
-
 CREATE TABLE IF NOT EXISTS `bindings` (
   `placement_name` varchar(140) NOT NULL,
   `unit_name` varchar(140) NOT NULL,
   KEY `placement_name` (`placement_name`),
   KEY `unit_name` (`unit_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `placement`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `placement` (
   `placement_name` varchar(140) NOT NULL,
@@ -38,13 +11,25 @@ CREATE TABLE IF NOT EXISTS `placement` (
   `width` int(11) NOT NULL DEFAULT '0',
   `height` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`placement_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `statistics` (
+  `unit_name` varchar(140) NOT NULL,
+  `date` date NOT NULL,
+  `shows` int(10) NOT NULL,
+  `clicks` int(10) NOT NULL,
+  UNIQUE KEY `unit_name` (`unit_name`,`date`),
+  KEY `date` (`date`),
+  KEY `unit_name_2` (`unit_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Структура таблицы `unit`
---
+CREATE TABLE IF NOT EXISTS `statistics_cache` (
+  `unit_name` varchar(140) NOT NULL,
+  `date` date NOT NULL,
+  `shows` int(10) NOT NULL DEFAULT '0',
+  `clicks` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`unit_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `unit` (
   `unit_name` varchar(140) NOT NULL,
@@ -52,13 +37,32 @@ CREATE TABLE IF NOT EXISTS `unit` (
   `title` varchar(255) NOT NULL,
   `weight` int(11) NOT NULL DEFAULT '1',
   `link` varchar(512) NOT NULL,
-  `status` enum('active','delete') NOT NULL,
+  `status` enum('active','delete','inactive') NOT NULL,
   `image_url` varchar(512) DEFAULT NULL,
+  `image_type` enum('local','remote') NOT NULL,
   `html` text,
-  `shows` int(10) NOT NULL,
-  `clicks` int(10) NOT NULL,
-  `views_limit` int(10) NOT NULL,
-  `clicks_limit` int(10) NOT NULL,
-  `time_limit` date NOT NULL,
+  `shows_limit` int(10) DEFAULT NULL,
+  `clicks_limit` int(10) DEFAULT NULL,
+  `time_limit` date DEFAULT NULL,
   PRIMARY KEY (`unit_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `bindings`
+  ADD CONSTRAINT `bindings_placement` FOREIGN KEY (`placement_name`) REFERENCES `placement` (`placement_name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `bindings_unit` FOREIGN KEY (`unit_name`) REFERENCES `unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `statistics`
+  ADD CONSTRAINT `statistics_ibfk_1` FOREIGN KEY (`unit_name`) REFERENCES `unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `statistics_cache`
+  ADD CONSTRAINT `statistics_cache_ibfk_1` FOREIGN KEY (`unit_name`) REFERENCES `unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE DEFINER=`root`@`localhost` EVENT `units_inactivation` ON SCHEDULE EVERY 5 MINUTE ON COMPLETION NOT PRESERVE ENABLE DO update unit left join statistics_cache on unit.unit_name = statistics_cache.unit_name set status = 'inactive'
+where (
+(shows_limit IS NOT NULL AND shows_limit <= ifnull(statistics_cache.shows, 0) + (select sum(shows) from statistics where date > ifnull(statistics_cache.date, '1000-01-01') and statistics_cache.unit_name = unit.unit_name)) 
+OR 
+(clicks_limit IS NOT NULL AND clicks_limit <= ifnull(statistics_cache.clicks, 0) + (select sum(clicks) from statistics where date > ifnull(statistics_cache.date, '1000-01-01') and statistics_cache.unit_name = unit.unit_name))
+OR 
+(time_limit IS NOT NULL AND time_limit <= CURDATE())
+)
+and status = 'active';

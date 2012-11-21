@@ -308,4 +308,6 @@
 
 $(document).ready(function(){
 $('#time_limit').simpleDatepicker();
+$('#start_date').simpleDatepicker();
+$('#end_date').simpleDatepicker();
 });
