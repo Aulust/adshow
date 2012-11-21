@@ -5,6 +5,11 @@ dbuser = adshow
 dbpass = adshow
 
 [Service Settings]
-host = localhost
-port = 8080
+host = 127.0.0.1
+port = 1337
 dbrefresh = 60000
+statisticsRefresh = 60000
+
+[Image Server]
+imageServer = http://adshow.local
+uploadDir = /img/adv/
