@@ -7,7 +7,6 @@ module.exports = Placements;
 Placements.prototype.getUnit = function(placementId) {
     var placement = this.placements[placementId];
     var result = null;
-
     if(placement) {
         var sum = Math.floor(Math.random() * placement.sum) + 1;
 
@@ -30,7 +29,7 @@ Placements.prototype.load = function(data, units) {
     console.log(data);
 
     data.forEach(function(binding) {
-        var unit = units.getUnit(binding.unit_name);
+        var unit = units.getUnit(binding.unit_name); 
         if(unit) {
             var placement = this.placements[binding.placement_name];
             if(!placement) {

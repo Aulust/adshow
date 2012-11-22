@@ -11,7 +11,6 @@ Units.prototype.getUnit = function(unitId) {
     if(this.units[unitId]) {
         return this.units[unitId];
     }
-
     return null;
 };
 
@@ -33,3 +32,4 @@ Units.prototype.load = function(data) {
         }
     }, this);
 };
+
