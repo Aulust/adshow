@@ -41,7 +41,7 @@ var serviceSettings = settings['Service Settings'];
 var engine = new Engine(settings);
 
 var notFound = function(res) {
-    res.writeHead(200, {
+    res.writeHead(404, {
         'Content-Type': 'text/html',
         'Expires': '0',
         'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
@@ -56,7 +56,7 @@ var routers = [
         if(result) {
             res.writeHead(200, {
                 'Content-Type': 'text/html',
-                'Expires': 'Thu, 19 Nov 1981 08:52:00 GMT',
+                'Expires': '0',
                 'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
                 'Pragma': 'no-cache'
             });
