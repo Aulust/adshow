@@ -1,8 +1,6 @@
 var http = require('http');
 var fs = require('fs');
 var Engine = require('./engine.js');
-var Units = require('./units.js');
-var Statistics = require('./statistics.js');
 var iframeTemplate = require('./iframe.js');
 
 var regex = {
@@ -40,19 +38,21 @@ var parseConfig = function(data) {
 
 var settings = parseConfig(fs.readFileSync('../config/config', 'utf8'));
 var serviceSettings = settings['Service Settings'];
-var imageServerSettings = settings['Image Server'];
 var engine = new Engine(settings);
-var units = new Units(settings);
-var statistics = new Statistics(settings, engine);
 
 var notFound = function(res) {
-    res.writeHead(404, {'Content-Type': 'text/html'});
+    res.writeHead(200, {
+        'Content-Type': 'text/html',
+        'Expires': '0',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+        'Pragma': 'no-cache'
+    });
     res.end(iframeTemplate.replace('{data}', ''));
 };
 
 var routers = [
     {'pattern': /\/show\/([a-zA-Z0-9.]+)/, 'controller': function(res, placementId) {
-        var result = engine.getCodeAndName(placementId, imageServerSettings.imageServer);
+        var result = engine.getCode(placementId);
         if(result) {
             res.writeHead(200, {
                 'Content-Type': 'text/html',
@@ -60,24 +60,16 @@ var routers = [
                 'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
                 'Pragma': 'no-cache'
             });
-            res.end(iframeTemplate.replace('{data}', result.code));
-			statistics.updateShows(result.name);
+            res.end(iframeTemplate.replace('{data}', result));
         } else {
-			res.writeHead(200, {
-                'Content-Type': 'text/html',
-                'Expires': 'Thu, 19 Nov 1981 08:52:00 GMT',
-                'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
-                'Pragma': 'no-cache'
-            });
-            res.end();
+            notFound(res);
         }
     }},
     {'pattern': /\/click\/([a-zA-Z0-9.]+)/, 'controller': function(res, unitId) {
-        var result = engine.getLinkAndName(unitId);
+        var result = engine.getLink(unitId);
         if(result) {
-            res.writeHead(301, {'Location': result.link});
+            res.writeHead(301, {'Location': result});
             res.end();
-			statistics.updateClicks(result.name);
         } else {
             notFound(res);
         }

@@ -12,12 +12,7 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Units</li>
-              <? foreach($Units as $availableUnit) : ?>
-                <li class="nav-controls <?= isset($unit) && $availableUnit->name == $unit->name ? 'active' : '' ?>">
-                  <a href="/statistics/<?= $availableUnit->name ?>"><?= $availableUnit->title ?></a>
-                </li>
-              <? endforeach ?>
-              <? foreach($nUnits as $availableUnit) : ?>
+              <? foreach($units as $availableUnit) : ?>
                 <li class="nav-controls <?= isset($unit) && $availableUnit->name == $unit->name ? 'active' : '' ?>">
                   <a href="/statistics/<?= $availableUnit->name ?>"><?= $availableUnit->title ?></a>
                 </li>

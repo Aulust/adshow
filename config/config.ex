@@ -5,8 +5,8 @@ dbuser = adshow
 dbpass = adshow
 
 [Service Settings]
-host = 127.0.0.1
-port = 1337
+host = localhost
+port = 8080
 dbrefresh = 60000
 statisticsRefresh = 60000
 

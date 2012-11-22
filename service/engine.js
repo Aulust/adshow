@@ -1,14 +1,17 @@
 var mysql = require('mysql');
 var Placements = require('./placements.js');
 var Units = require('./units.js');
+var Statistics = require('./statistics.js');
 
 var Engine = function(settings) {
     this.units = new Units();
     this.placements = new Placements();
-
     var dbSettings = settings['Database settings'];
     var serviceSettings = settings['Service Settings'];
 
+    this.statistics = new Statistics(serviceSettings.statisticsRefresh, this);
+
+    this.imageServer = settings['Image Server'].imageServer;
     this.config = {
         host : dbSettings.dbhost,
         user : dbSettings.dbuser,
@@ -59,21 +62,19 @@ Engine.prototype.load = function() {
     }.bind(this));
 };
 
-Engine.prototype.getCodeAndName = function(placementId, imageServer) {
+Engine.prototype.getCode = function(placementId) {
     var unit = this.placements.getUnit(placementId);
     if(unit) {
-        return {'code': unit.getCode(imageServer).replace('{url}', '/click/' + unit.name + '?rand='+new Date().getTime()), 'name': unit.name};
+        this.statistics.increaseShows(unit.name);
+        return unit.getCode(this.imageServer).replace('{url}', '/click/' + unit.name + '?rand='+new Date().getTime());
     }
 };
 
-Engine.prototype.getLinkAndName = function(unitId) {
+Engine.prototype.getLink = function(unitId) {
     var unit = this.units.getUnit(unitId);
     if(unit) {
-        return {'link': unit.link, 'name': unit.name};
+        this.statistics.increaseClicks(unit.name);
+        return unit.link;
     }
 };
 
-Engine.prototype.getDefaultImage = function(res, imageServer) {
-	var defaultImage = '<img src="' + imageServer + '/img/defaultimage.jpg" alt="sc2tv.ru"/>';
-	return defaultImage;
-};

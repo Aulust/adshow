@@ -5,7 +5,7 @@
   <form method="POST">
   <dl class="dl-horizontal">
     <dt>Start date</dt>
-    <dd><input type="text" name="start_date" id="start_date" class="input-xlarge" value="<?= htmlspecialchars($unit->start_date) ?>"></dd>
+    <dd><input type="text" name="start_date" id="start_date" class="input-xlarge" value="<?= htmlspecialchars($start_date) ?>"></dd>
     <dt>End date</dt>
     <dd><input type="text" name="end_date" id="end_date" class="input-xlarge" value="<?= date("Y-m-d"); ?>"></dd>
     <dt>Show</dt>

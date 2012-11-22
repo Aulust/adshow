@@ -6,13 +6,12 @@ $app->get('/units', function () use($app, $unitDao, $permissionsService) {
     }
 
     $availableUnits = $unitDao->getAll();
-    $notavailableUnits = $unitDao->getInActive();
     if($availableUnits === null) {
         $app->error();
     }
 
     LayoutView::set_layout('layout/unit.tpl.php');
-    $app->render('units/units.tpl.php', array('availableUnits' => $availableUnits,'notavailableUnits' => $notavailableUnits));
+    $app->render('units/units.tpl.php', array('availableUnits' => $availableUnits));
 });
 
 $app->get('/units/:name', function ($name) use($app, $unitDao, $validationService, $permissionsService) {
@@ -228,57 +227,3 @@ $app->post('/units/:name/delete', function ($name) use($app, $unitDao, $bindingD
     }
 });
 
-$app->get('/units/:name/activate', function ($name) use($app, $unitDao, $validationService, $permissionsService) {
-    if(!$validationService->checkName($name) || !$permissionsService->checkPermission('view units') ||
-       !$permissionsService->checkPermission('delete unit')) {
-       $app->notFound();
-    }
-
-    $unit = $unitDao->get($name);
-    if($unit === null) {
-        $app->notFound();
-    }
-
-    $availableUnits = $unitDao->getAll();
-    if($availableUnits === null) {
-        $app->error();
-    }
-
-    $token = $validationService->generateToken(ValidationService::UNIT_FORM_TOKEN_NAME);
-
-    LayoutView::set_layout('layout/unit.tpl.php');
-    $app->render('units/activate.tpl.php', array('availableUnits' => $availableUnits, 'unit' => $unit, 'token' => $token));
-});
-
-$app->post('/units/:name/activate', function ($name) use($app, $unitDao, $bindingDao, $validationService, $permissionsService) {
-    if(!$validationService->checkName($name) || !$permissionsService->checkPermission('view units') ||
-       !$permissionsService->checkPermission('delete unit')) {
-       $app->notFound();
-    }
-
-    $unit = $unitDao->get($name);
-    if($unit === null) {
-        $app->notFound();
-    }
-
-    $token = isset($_POST['token']) ? $_POST['token'] : '';
-
-    if(!$validationService->checkToken(ValidationService::UNIT_FORM_TOKEN_NAME, $token)) {
-        $availableUnits = $unitDao->getAll();
-        if($availableUnits === null) {
-            $app->error();
-        }
-
-        $token = $validationService->generateToken(ValidationService::UNIT_FORM_TOKEN_NAME);
-
-        LayoutView::set_layout('layout/unit.tpl.php');
-        $app->render('units/activate.tpl.php', array('availableUnits' => $availableUnits, 'unit' => $unit,
-            'errors' => '', 'token' => $token));
-    } else {
-        if($unitDao->activate($unit)) {
-            $app->redirect('/units');
-        } else {
-            $app->error();
-        }
-    }
-});

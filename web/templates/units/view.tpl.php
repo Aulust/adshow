@@ -34,6 +34,5 @@
     <? endif ?>
   </dl>
   <a href="/units/<?= $unit->name ?>/edit" class="btn btn-mini"><i class="icon-edit"></i>Edit</a>
-  <? if($unit->status == 'active') : ?><a href="/units/<?= $unit->name ?>/delete" class="btn btn-mini btn-danger"><i class="icon-trash"></i>Delete</a><? endif ?>
-  <? if($unit->status == 'delete') : ?><a href="/units/<?= $unit->name ?>/activate" class="btn btn-mini btn-activate">Activate</a><? endif ?>
+  <a href="/units/<?= $unit->name ?>/delete" class="btn btn-mini btn-danger"><i class="icon-trash"></i>Delete</a>
 </div>

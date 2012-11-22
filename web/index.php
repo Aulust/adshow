@@ -21,7 +21,7 @@ $validationService = new ValidationService();
 $permissionsService = new PermissionsService();
 
 $unitDao = new UnitDao($databaseService->getConnection(), $databaseService->getConfig());
-$StatisticDao = new StatisticDao($databaseService->getConnection());
+$statisticDao = new StatisticDao($databaseService->getConnection());
 $placementDao = new PlacementDao($databaseService->getConnection());
 $bindingDao = new BindingDao($databaseService->getConnection());
 

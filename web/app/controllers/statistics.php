@@ -5,40 +5,33 @@ $app->get('/statistics', function () use($app, $unitDao, $permissionsService) {
         $app->notFound();
     }
 
-    $Units = $unitDao->getAll();
-    $nUnits = $unitDao->getInActive();
-    if($Units === null) {
-        $app->error();
+    $units = $unitDao->getAll();
+    if($units === null) {
+        $units = array();
     }
 
     LayoutView::set_layout('layout/statistic.tpl.php');
-    $app->render('statistics/units.tpl.php', array('Units' => $Units, 'nUnits' => $nUnits));
+    $app->render('statistics/units.tpl.php', array('units' => $units));
 });
 
-$app->get('/statistics/:name', function ($name) use($app, $unitDao, $StatisticDao, $validationService, $permissionsService) {
+$app->get('/statistics/:name', function ($name) use($app, $unitDao, $statisticDao, $validationService, $permissionsService) {
     if(!$validationService->checkName($name) || !$permissionsService->checkPermission('view statistics')) {
        $app->notFound();
     }
 
-    $Units = $unitDao->getAll();
-    $nUnits = $unitDao->getInActive();
+    $units = $unitDao->getAll();
     $unit = $unitDao->get($name);
     if($unit === null) {
         $app->notFound();
     }
-    $sdate = $StatisticDao->getStartDate($name);
-    $unit->start_date = $sdate[0];
-    
-    $availableUnits = $unitDao->getAll();
-    if($availableUnits === null) {
-        $app->error();
-    }
+    $sdate = $statisticDao->getStartDate($name);
+    $start_date = $sdate[0];
 
     LayoutView::set_layout('layout/statistic.tpl.php');
-    $app->render('statistics/view.tpl.php', array('Units' => $Units, 'nUnits' => $nUnits, 'unit' => $unit));
+    $app->render('statistics/view.tpl.php', array('units' => $units, 'unit' => $unit, 'start_date' => $start_date));
 });
 
-$app->post('/statistics/:name', function ($name) use($app, $unitDao, $StatisticDao, $validationService, $permissionsService) {
+$app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticDao, $validationService, $permissionsService) {
     if(!$permissionsService->checkPermission('view statistics')) {
         $app->notFound();
     }
@@ -55,18 +48,17 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $StatisticD
     }
     
     if(isset($_POST['download_stat'])) 
-        $StatisticDao->uploadStatistic($name, $start_date, $end_date, $statistic_show);
+        $statisticDao->uploadStatistic($name, $start_date, $end_date, $statistic_show);
     else 
-        $stat = $StatisticDao->showStatistic($name, $start_date, $end_date, $statistic_show);
+        $stat = $statisticDao->showStatistic($name, $start_date, $end_date, $statistic_show);
     
     if($stat) {
-        $Units = $unitDao->getAll();
-        $nUnits = $unitDao->getInActive();
-        if($Units === null) {
-            $app->error();
+        $units = $unitDao->getAll();
+        if($units === null) {
+            $units = array();
         }
         LayoutView::set_layout('layout/statistic.tpl.php');
-        $app->render('statistics/stat.tpl.php', array('stat' => $stat, 'Units' => $Units, 'nUnits' => $nUnits, 'statistic_show' => $statistic_show));    
+        $app->render('statistics/stat.tpl.php', array('stat' => $stat, 'units' => $units, 'statistic_show' => $statistic_show));    
     }
     else {
         $app->error();

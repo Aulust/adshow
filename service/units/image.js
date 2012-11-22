@@ -13,8 +13,5 @@ var Image = function(data) {
 
 module.exports = Image;
 Image.prototype.getCode = function(imageServer) {
-    if(this.image_type == 'local')
-        return util.format(CODE, this.name, imageServer + this.imageUrl, this.name);
-    else 
-        return util.format(CODE, this.name, this.imageUrl, this.name);
+    return util.format(CODE, this.name, (this.image_type == 'local' ? imageServer : '') + this.imageUrl, this.name);
 };

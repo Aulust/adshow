@@ -52,12 +52,12 @@ ALTER TABLE `bindings`
   ADD CONSTRAINT `bindings_unit` FOREIGN KEY (`unit_name`) REFERENCES `unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `statistics`
-  ADD CONSTRAINT `statistics_ibfk_1` FOREIGN KEY (`unit_name`) REFERENCES `unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `statistics_unit_ibfk_1` FOREIGN KEY (`unit_name`) REFERENCES `unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `statistics_cache`
-  ADD CONSTRAINT `statistics_cache_ibfk_1` FOREIGN KEY (`unit_name`) REFERENCES `unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `statistics_unit_cache_ibfk_1` FOREIGN KEY (`unit_name`) REFERENCES `unit` (`unit_name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-CREATE DEFINER=`root`@`localhost` EVENT `units_inactivation` ON SCHEDULE EVERY 5 MINUTE ON COMPLETION NOT PRESERVE ENABLE DO update unit left join statistics_cache on unit.unit_name = statistics_cache.unit_name set status = 'inactive'
+CREATE EVENT `units_inactivation` ON SCHEDULE EVERY 5 MINUTE ON COMPLETION NOT PRESERVE ENABLE DO update unit left join statistics_cache on unit.unit_name = statistics_cache.unit_name set status = 'inactive'
 where (
 (shows_limit IS NOT NULL AND shows_limit <= ifnull(statistics_cache.shows, 0) + (select sum(shows) from statistics where date > ifnull(statistics_cache.date, '1000-01-01') and statistics_cache.unit_name = unit.unit_name)) 
 OR 

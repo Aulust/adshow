@@ -23,20 +23,6 @@ class UnitDao {
         }
     }
 
-    public function getInActive() {
-        try {
-            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, title, type, time_limit, status, shows, clicks, image_url
-                                        FROM unit INNER JOIN statistics_cache ON unit.unit_name = statistics_cache.unit_name
-                                        WHERE status = "delete"');
-            $sth->execute();
-            $units = $sth->fetchAll(PDO::FETCH_CLASS, 'Unit');
-
-            return $units;
-        } catch(PDOException $e) {
-            return null;
-        }
-    }
-
     public function get($name) {
         try {
             $sth = $this->dbh->prepare('SELECT unit.unit_name as name, type, title, weight, link, image_url as imageUrl,
@@ -70,7 +56,7 @@ class UnitDao {
     public function update($unit) {
         try {
             $sth = $this->dbh->prepare('UPDATE unit SET title = :title, weight = :weight, shows_limit = :shows_limit,
-                                        clicks_limit = :clicks_limit, time_limit = :time_limit, link = :link,
+                                        clicks_limit = :clicks_limit, time_limit = :time_limit, link = :link, status = "active",
                                         html = :html' . (($unit->imageUrl || (isset($_FILES['imageUrl']) && $_FILES["imageUrl"]["tmp_name"]!='')) ? ', image_url = :image_url, image_type = :image_type' : '') . ' WHERE unit_name = :name');
 
             $sth->bindParam(':title', $unit->title, PDO::PARAM_STR);
@@ -138,18 +124,6 @@ class UnitDao {
     public function delete($unit) {
         try {
             $sth = $this->dbh->prepare('UPDATE unit SET status = "delete" WHERE unit_name = :name');
-
-            $sth->bindParam(':name', $unit->name, PDO::PARAM_STR);
-            $sth->execute();
-        } catch(PDOException $e) {
-            return false;
-        }
-
-        return true;
-    }
-    public function activate($unit) {
-        try {
-            $sth = $this->dbh->prepare('UPDATE unit SET status = "active" WHERE unit_name = :name');
 
             $sth->bindParam(':name', $unit->name, PDO::PARAM_STR);
             $sth->execute();

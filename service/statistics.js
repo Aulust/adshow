@@ -1,48 +1,42 @@
-var Statistics = function(settings, engine) {
-    this.units_stat = new Object();
+var Statistics = function(statisticsRefresh, engine) {
+    this.units_stat = {};
     this.engine = engine;
     
-    var serviceSettings = settings['Service Settings'];
-    
-    setInterval(this.uploadStat.bind(this), serviceSettings.statisticsRefresh);
+    setInterval(this.uploadStat.bind(this), statisticsRefresh);
 };
 
 module.exports = Statistics;
 
-Statistics.prototype.updateShows = function(name) {
-    if(!this.units_stat[name]) {
-        this.units_stat[name] = {'shows':0, 'clicks':0};
-    }
-        this.units_stat[name].shows ++;
+Statistics.prototype.increaseShows = function(name) {
+    this._update(name, 'shows');
 };
 
-Statistics.prototype.updateClicks = function(name) {
+Statistics.prototype.increaseClicks = function(name) {
+    this._update(name, 'clicks');
+};
+
+Statistics.prototype._update = function(name, statistic) {
     if(!this.units_stat[name]) {
         this.units_stat[name] = {'shows':0, 'clicks':0};
     }
-        this.units_stat[name].clicks ++;
-};
+    this.units_stat[name][statistic]++;
+}
 
 Statistics.prototype.uploadStat = function() {
-    today = new Date();
-    date = 'yyyy-MM-dd'.replace('yyyy', today.getFullYear()).replace('MM', today.getMonth()+1).replace('dd', today.getDate());
-    
-    var values = new Array();
+    var values = [];
     for (name in this.units_stat) {
-        values[values.length] = '("' + name + '","' + date + '","' + this.units_stat[name].shows + '","' + this.units_stat[name].clicks + '")';
+        values.push('("' + name + '",NOW(),"' + this.units_stat[name].shows + '","' + this.units_stat[name].clicks + '")');
     }
     
-    values = values.join();
+    sqlValues = values.join();
     
-    if(values != '') {
-        query = 'INSERT INTO statistics (unit_name,date,shows,clicks) VALUES ' + values + ' ON DUPLICATE KEY UPDATE shows = shows + VALUES (shows), clicks = clicks + VALUES (clicks);';
-        this.engine.connection.query('START TRANSACTION;' +
-                                      query +
-                                      'COMMIT;', function(err) {
+    if(sqlValues != '') {
+        query = 'INSERT INTO statistics (unit_name,date,shows,clicks) VALUES ' + sqlValues + ' ON DUPLICATE KEY UPDATE shows = shows + VALUES (shows), clicks = clicks + VALUES (clicks);';
+        this.engine.connection.query(query, function(err) {
             if (err) {
                 return;
             }
-        this.units_stat = new Object();
+        this.units_stat = {};
         }.bind(this));
     }
 };
