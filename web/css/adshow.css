@@ -1,0 +1,18 @@
+.nav-controls {
+  position: relative;
+}
+
+.nav-controls > div {
+  position: absolute;
+  top:0;
+  right: 0;
+  height: 100%;
+}
+
+.nav-controls > div > a {
+  vertical-align: middle;
+}
+
+.center-content {
+  text-align: center;
+}
