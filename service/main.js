@@ -38,21 +38,27 @@ var parseConfig = function(data) {
 
 var settings = parseConfig(fs.readFileSync('../config/config', 'utf8'));
 var serviceSettings = settings['Service Settings'];
-
 var engine = new Engine(settings);
 
 var notFound = function(res) {
-    res.writeHead(404, {'Content-Type': 'text/html'});
+    res.writeHead(404, {
+        'Content-Type': 'text/html',
+        'Expires': '0',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+        'Pragma': 'no-cache'
+    });
     res.end(iframeTemplate.replace('{data}', ''));
 };
 
 var routers = [
     {'pattern': /\/show\/([a-zA-Z0-9.]+)/, 'controller': function(res, placementId) {
         var result = engine.getCode(placementId);
-
         if(result) {
             res.writeHead(200, {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/html',
+                'Expires': '0',
+                'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+                'Pragma': 'no-cache'
             });
             res.end(iframeTemplate.replace('{data}', result));
         } else {
@@ -61,7 +67,6 @@ var routers = [
     }},
     {'pattern': /\/click\/([a-zA-Z0-9.]+)/, 'controller': function(res, unitId) {
         var result = engine.getLink(unitId);
-
         if(result) {
             res.writeHead(301, {'Location': result});
             res.end();
