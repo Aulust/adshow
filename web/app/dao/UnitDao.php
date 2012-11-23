@@ -42,7 +42,7 @@ class UnitDao {
 
     public function getNames() {
         try {
-            $sth = $this->dbh->prepare('SELECT unit_name as name FROM unit WHERE status = "active"');
+            $sth = $this->dbh->prepare('SELECT unit_name as name FROM unit WHERE status <> "delete"');
 
             $sth->execute();
             $unit = $sth->fetchAll(PDO::FETCH_COLUMN);
