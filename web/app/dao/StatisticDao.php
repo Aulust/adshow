@@ -21,7 +21,7 @@ class StatisticDao {
     }
     
     public function getStatistic($name, $start_date, $end_date, $statistic_show) {
-        $stat_select = $this->prepareStatisticSelect($statistic_show);
+        $stat_select = $this->getStatisticSelect($statistic_show);
         try {
             $sth = $this->dbh->prepare("SELECT $stat_select FROM `statistics` WHERE `date`>=:start_date AND `date`<=:end_date AND unit_name=:name");
             $sth->bindParam(':name', $name, PDO::PARAM_STR);
@@ -36,12 +36,12 @@ class StatisticDao {
         return $res;
     }
     
-    public function prepareStatisticSelect($statistic_show) {
+    public function getStatisticSelect($statistic_show) {
         switch ($statistic_show) {
-            case 'all': $fetch = array('`date`', '`shows`', '`clicks`'); break;
-            case 'shows': $fetch = array('`date`', 'shows'); break;
-            case 'clicks': $fetch = array('`date`', '`clicks`'); break;
-            default: $fetch = array('`date`', '`shows`', '`clicks`');
+            case 'all': $fetch = array('date', 'shows', 'clicks'); break;
+            case 'shows': $fetch = array('date', 'shows'); break;
+            case 'clicks': $fetch = array('date', 'clicks'); break;
+            default: $fetch = array('date', 'shows', 'clicks');
         }
         $res=join(',',$fetch);
         return $res;

@@ -42,12 +42,13 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
     $statistic_show = $_POST['statistic_show'];
     
     if(isset($_POST['export_stat'])) {
-        if($res = $statisticDao->getStatistic($name, $start_date, $end_date, $statistic_show)) {       
-            $statArray=array();
+        if($res = $statisticDao->getStatistic($name, $start_date, $end_date, $statistic_show)) {
+            $helpLine = $statisticDao->getStatisticSelect($statistic_show);
+            $statArray = array($helpLine);
             foreach ($res as $r) {
-                $statArray[]=join(',',$r);
+                $statArray[] = join(',', $r);
             }
-            $stat=join("\r\n",$statArray);
+            $stat = join("\r\n", $statArray);
             
             $res = $app->response();
             $res['Content-Type'] = 'application/CSV';
