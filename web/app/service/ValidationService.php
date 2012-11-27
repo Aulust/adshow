@@ -12,18 +12,18 @@ class ValidationService {
         $errors->title = !$this->checkTitle($unit->title);
         $errors->weight = !$this->checkWeight($unit->weight);
         if($unit->type=='image') {
-			$errors->link = !$this->checkLink($unit->link);
-			$errors->imageUrl = !$this->checkImageUrl($unit->imageUrl, $type);
-			$errors->html = false;
-		}
-		else if($unit->type=='html') {
-			$errors->link = false;
-			$errors->imageUrl = false;
-			$errors->html = !$this->checkHtml($unit->html);
-		}
-		$errors->clicks_limit = !$this->checkClicksLimit($unit->clicks_limit);
-		$errors->shows_limit = !$this->checkShowsLimit($unit->shows_limit);
-		$errors->time_limit = !$this->checkTimeLimit($unit->time_limit);
+            $errors->link = !$this->checkLink($unit->link);
+            $errors->imageUrl = !$this->checkImageUrl($unit->imageUrl, $type);
+            $errors->html = false;
+        }
+        else if($unit->type=='html') {
+            $errors->link = false;
+            $errors->imageUrl = false;
+            $errors->html = !$this->checkHtml($unit->html);
+        }
+        $errors->clicks_limit = !$this->checkClicksLimit($unit->clicks_limit);
+        $errors->shows_limit = !$this->checkShowsLimit($unit->shows_limit);
+        $errors->time_limit = !$this->checkTimeLimit($unit->time_limit);
 
         $errors->token = !$this->checkToken(ValidationService::UNIT_FORM_TOKEN_NAME, $token);
 

@@ -2,12 +2,8 @@
 
 class DatabaseService {
     private $dbh;
-    private $config;
     
-    public function DatabaseService() {
-        $config = parse_ini_file('../config/config');
-        $this->config = $config;
-        
+    public function DatabaseService($config) {        
         $dbhost = $config['dbhost'];
         $dbuser = $config['dbuser'];
         $dbpass = $config['dbpass'];
@@ -41,9 +37,5 @@ class DatabaseService {
         try {
             $this->dbh->rollBack();
         } catch(PDOException $e) {}
-    }
-    
-    public function getConfig() {
-        return $this->config;
     }
 }

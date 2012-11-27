@@ -7,7 +7,7 @@
     <div>Clicks: <?= $stat['clicks_sum'];?></div>
 <? endif ?>
 <script>
-    var shows = [<?= $stat['shows'] ? $stat['shows'] : false ?>];
-    var clicks = [<?= $stat['clicks'] ? $stat['clicks'] : false ?>];
+    var shows = <?= $stat['shows'] ? '[' . $stat['shows'] .']' : 'null' ?>;
+    var clicks = <?= $stat['clicks'] ? '[' . $stat['clicks'] .']' : 'null' ?>;
 </script>
 <script src="/js/statistic/print.js"></script>

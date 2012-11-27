@@ -10,17 +10,19 @@ require 'app/dao/UnitDao.php';
 require 'app/dao/StatisticDao.php';
 require 'app/dao/PlacementDao.php';
 require 'app/dao/BindingDao.php';
+require 'app/service/ConfigService.php';
 require 'app/service/DatabaseService.php';
 require 'app/service/UnitErrors.php';
 require 'app/service/PlacementErrors.php';
 require 'app/service/ValidationService.php';
 require 'app/service/PermissionsService.php';
 
-$databaseService = new DatabaseService();
+$configService = new ConfigService();
+$databaseService = new DatabaseService($configService->getConfig());
 $validationService = new ValidationService();
 $permissionsService = new PermissionsService();
 
-$unitDao = new UnitDao($databaseService->getConnection(), $databaseService->getConfig());
+$unitDao = new UnitDao($databaseService->getConnection(), $configService->getConfig());
 $statisticDao = new StatisticDao($databaseService->getConnection());
 $placementDao = new PlacementDao($databaseService->getConnection());
 $bindingDao = new BindingDao($databaseService->getConnection());

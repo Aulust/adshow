@@ -16,7 +16,7 @@
             <li class="<?= isset($availablePlacements) ? 'active' : '' ?>"><a href="/placements">Placements</a></li>
           <? endif ?>
           <? if($permissionsService->checkPermission('view statistics')) : ?>
-            <li class="<?= isset($Units) ? 'active' : '' ?>"><a href="/statistics">Statistics</a></li>
+            <li class="<?= isset($units) ? 'active' : '' ?>"><a href="/statistics">Statistics</a></li>
           <? endif ?>
         </ul>
       </div>

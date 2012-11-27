@@ -24,8 +24,7 @@ $app->get('/statistics/:name', function ($name) use($app, $unitDao, $statisticDa
     if($unit === null) {
         $app->notFound();
     }
-    $sdate = $statisticDao->getStartDate($name);
-    $start_date = $sdate[0];
+    $start_date = $statisticDao->getStartDate($name);
 
     LayoutView::set_layout('layout/statistic.tpl.php');
     $app->render('statistics/view.tpl.php', array('units' => $units, 'unit' => $unit, 'start_date' => $start_date));
@@ -40,29 +39,69 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
     if($end_date == '1970-01-01')
         $end_date = $date("Y-m-d");
     
-    switch($_POST['statistic_show']) {
-        case 'all': $statistic_show = 'all'; break;
-        case 'shows': $statistic_show = 'shows'; break;
-        case 'clicks': $statistic_show = 'clicks'; break;
-        default: $statistic_show = 'all';
-    }
+    $statistic_show = $_POST['statistic_show'];
     
-    if(isset($_POST['download_stat'])) 
-        $statisticDao->uploadStatistic($name, $start_date, $end_date, $statistic_show);
-    else 
-        $stat = $statisticDao->showStatistic($name, $start_date, $end_date, $statistic_show);
-    
-    if($stat) {
-        $units = $unitDao->getAll();
-        if($units === null) {
-            $units = array();
+    if(isset($_POST['export_stat'])) {
+        if($res = $statisticDao->getStatistic($name, $start_date, $end_date, $statistic_show)) {       
+            $statArray=array();
+            foreach ($res as $r) {
+                $statArray[]=join(',',$r);
+            }
+            $stat=join("\r\n",$statArray);
+            
+            $res = $app->response();
+            $res['Content-Type'] = 'application/CSV';
+            $res->write($stat);
         }
-        LayoutView::set_layout('layout/statistic.tpl.php');
-        $app->render('statistics/stat.tpl.php', array('stat' => $stat, 'units' => $units, 'statistic_show' => $statistic_show));    
+        else {
+            $units = $unitDao->getAll();
+            if($units === null) {
+                $units = array();
+            }
+            $unit = $unitDao->get($name);
+
+            LayoutView::set_layout('layout/statistic.tpl.php');
+            $app->render('statistics/view.tpl.php', array('units' => $units, 'unit' => $unit, 'start_date' => $start_date, 'error' => 'not_found'));
+        }
     }
     else {
-        $app->error();
+        if($res = $statisticDao->getStatistic($name, $start_date, $end_date, $statistic_show)) {
+            $clicksArray = array();
+            $showsArray = array();
+            $shows_sum = 0;
+            $clicks_sum = 0;
+            foreach($res as $r) {
+                if(isset($r['shows'])) {
+                    $showsArray[] = '["'.$r['date'].'",'.$r['shows'].']';
+                    $shows_sum += $r['shows'];
+                }
+                if(isset($r['clicks'])) {
+                    $clicksArray[] = '["'.$r['date'].'",'.$r['clicks'].']';
+                    $clicks_sum += $r['clicks'];
+                }
+            }
+            $shows = join(',',$showsArray);
+            $clicks = join(',',$clicksArray);
+            $stat=array('shows'=>$shows, 'clicks'=>$clicks, 'shows_sum'=>$shows_sum, 'clicks_sum'=>$clicks_sum);
+        
+            $units = $unitDao->getAll();
+            if($units === null) {
+                $units = array();
+            }
+            
+            LayoutView::set_layout('layout/statistic.tpl.php');
+            $app->render('statistics/stat.tpl.php', array('stat' => $stat, 'units' => $units, 'statistic_show' => $statistic_show));    
+        }
+        else {
+            $units = $unitDao->getAll();
+            if($units === null) {
+                $units = array();
+            }
+            $unit = $unitDao->get($name);
+
+            LayoutView::set_layout('layout/statistic.tpl.php');
+            $app->render('statistics/view.tpl.php', array('units' => $units, 'unit' => $unit, 'start_date' => $start_date, 'error' => 'not_found'));
+        }
     }
-    
 });
 

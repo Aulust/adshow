@@ -18,8 +18,9 @@
     </dd>
     <dd>
     <input type="submit" value="View Statistic" name="view_stat">
-    <input type="submit" value="Download Statistic" name="download_stat">
+    <input type="submit" value="Export Statistic" name="export_stat">
     </dd>
+    <?= (isset ($error) && $error == 'not_found' ? '<dd class="error">No statistic</dd>' : '')?>
   </dl>
   </form>
 </div>

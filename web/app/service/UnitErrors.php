@@ -12,7 +12,7 @@ class UnitErrors {
 
     public function hasErrors($unit) {
         if($this->name || $this->type || $this->title || $this->weight || $this->link || $this->token ||
-            ($unit->type === 'html' && $this->html) || ($unit->type === 'image' && $this->imageUrl)) {
+            $this->html || $this->imageUrl) {
             return true;
         }
 
