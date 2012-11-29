@@ -16,7 +16,7 @@
         <div class="control-group <?= isset($errors) && $errors->type ? 'error' : '' ?>">
           <label for="type" class="control-label">Unit type</label>
           <div class="controls">
-            <select onChange="changeUnitType(this.value);" name="type" id="type">
+            <select name="type" id="unitType">
               <option value="image">Image unit</option>
               <option value="html" <?= $unit->type=='html' ? 'selected="selected"' : '' ?>>Html unit</option>
             </select>
@@ -72,7 +72,7 @@
         <label for="imageUrl" class="control-label">Image file</label>
         <div class="controls">
           <input type="file" name="imageUrl" id="imageUrl" class="input-xlarge">
-		  <input type="button" onclick="changeImageUploadType();" value="Change type">
+		  <input type="button" id="changeTypeBtn" value="Change type">
           <p class="help-block">Unit image. Upload file or type full url link to image.</p>
         </div>
       </div>

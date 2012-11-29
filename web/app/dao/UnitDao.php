@@ -57,7 +57,7 @@ class UnitDao {
         try {
             $sth = $this->dbh->prepare('UPDATE unit SET title = :title, weight = :weight, shows_limit = :shows_limit,
                                         clicks_limit = :clicks_limit, time_limit = :time_limit, link = :link, status = "active",
-                                        html = :html' . (($unit->imageUrl || (isset($_FILES['imageUrl']) && $_FILES["imageUrl"]["tmp_name"]!='')) ? ', image_url = :image_url, image_type = :image_type' : '') . ' WHERE unit_name = :name');
+                                        html = :html' . ($unit->imageUrl ? ', image_url = :image_url, image_type = :image_type' : '') . ' WHERE unit_name = :name');
 
             $sth->bindParam(':title', $unit->title, PDO::PARAM_STR);
             $sth->bindParam(':weight', $unit->weight, PDO::PARAM_INT);
@@ -70,19 +70,11 @@ class UnitDao {
                 $sth->bindParam(':image_url', $unit->imageUrl, PDO::PARAM_STR);
                 $sth->bindParam(':image_type', $unit->image_type, PDO::PARAM_STR);
             }
-            else if(isset($_FILES['imageUrl']) && $_FILES["imageUrl"]["tmp_name"]!='') {
-                $imageinfo = getimagesize($_FILES["imageUrl"]["tmp_name"]);
-                $mime=explode("/",$imageinfo["mime"]);
-                $unit->imageUrl = $this->config['uploadDir'] . $unit->name . '.' . $mime[1];
-                move_uploaded_file($_FILES['imageUrl']['tmp_name'], '.' . $unit->imageUrl);
-                $sth->bindParam(':image_url', $unit->imageUrl, PDO::PARAM_STR);
-                $sth->bindParam(':image_type', $unit->image_type, PDO::PARAM_STR);
-            }
             
             $sth->bindParam(':html', $unit->html, PDO::PARAM_STR);
             $sth->bindParam(':name', $unit->name, PDO::PARAM_STR);
             $sth->execute();
-        } catch(PDOException $e) {var_dump(1);die();
+        } catch(PDOException $e) {
             return false;
         }
         return true;
@@ -104,13 +96,6 @@ class UnitDao {
             $sth->bindParam(':clicks_limit', $unit->clicks_limit, PDO::PARAM_INT);
             $sth->bindParam(':time_limit', $unit->time_limit, PDO::PARAM_STR);
             $sth->bindParam(':link', $unit->link, PDO::PARAM_STR);
-            
-            if(!$unit->imageUrl && isset($_FILES['imageUrl'])) {
-                $imageinfo = getimagesize($_FILES["imageUrl"]["tmp_name"]);
-                $mime=explode("/",$imageinfo["mime"]);
-                $unit->imageUrl = $this->config['uploadDir'] . $unit->name . '.' . $mime[1];
-                move_uploaded_file($_FILES['imageUrl']['tmp_name'], '.' . $unit->imageUrl);
-            }
             $sth->bindParam(':image_url', $unit->imageUrl, PDO::PARAM_STR);
             $sth->bindParam(':image_type', $unit->image_type, PDO::PARAM_STR);
             $sth->bindParam(':html', $unit->html, PDO::PARAM_STR);

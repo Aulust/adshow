@@ -11,3 +11,12 @@ function changeImageUploadType() {
 	else
 		$('#imageUrl')[0].type='file';
 }
+
+$(document).ready(function(){
+    $('#unitType').change( function() {
+        changeUnitType(this.value);
+    });
+    $('#changeTypeBtn').click( function() {
+        changeImageUploadType();
+    });
+});

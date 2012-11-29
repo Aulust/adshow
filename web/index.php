@@ -16,8 +16,10 @@ require 'app/service/UnitErrors.php';
 require 'app/service/PlacementErrors.php';
 require 'app/service/ValidationService.php';
 require 'app/service/PermissionsService.php';
+require 'app/service/ImageService.php';
 
 $configService = new ConfigService();
+$imageService = new ImageService($configService->getConfig());
 $databaseService = new DatabaseService($configService->getConfig());
 $validationService = new ValidationService();
 $permissionsService = new PermissionsService();

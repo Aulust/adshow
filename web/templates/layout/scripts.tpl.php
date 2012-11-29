@@ -7,4 +7,4 @@
 <script src="/js/statistic/jqplot.highlighter.min.js"></script>
 <script src="/js/statistic/jqplot.cursor.min.js"></script>
 <script src="/js/statistic/jqplot.dateAxisRenderer.min.js"></script>
-
+<script src="/js/statistic/print.js"></script>

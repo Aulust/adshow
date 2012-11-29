@@ -35,14 +35,24 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
         $app->notFound();
     }
     $start_date = date("Y-m-d",strtotime($_POST['start_date']));
-    $end_date = date("Y-m-d",strtotime($_POST['end_date']));
-    if($end_date == '1970-01-01')
-        $end_date = $date("Y-m-d");
-    
+    $end_date = strtotime($_POST['end_date']);
+    if($end_date == false)
+        $end_date = date("Y-m-d");
+    else 
+        $end_date = date("Y-m-d", $end_date);
     $statistic_show = $_POST['statistic_show'];
-    
-    if(isset($_POST['export_stat'])) {
-        if($res = $statisticDao->getStatistic($name, $start_date, $end_date, $statistic_show)) {
+ 
+    $units = $unitDao->getAll();
+    if($units === null) {
+        $app->error();
+    }
+            
+    if(!$res = $statisticDao->getStatistic($name, $start_date, $end_date, $statistic_show)) {
+        $unit = $unitDao->get($name);
+        LayoutView::set_layout('layout/statistic.tpl.php');
+        $app->render('statistics/view.tpl.php', array('units' => $units, 'unit' => $unit, 'start_date' => $start_date, 'error' => 'not_found'));
+    }
+    else if(isset($_POST['export_stat'])) {
             $helpLine = $statisticDao->getStatisticSelect($statistic_show);
             $statArray = array($helpLine);
             foreach ($res as $r) {
@@ -53,56 +63,11 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
             $res = $app->response();
             $res['Content-Type'] = 'application/CSV';
             $res->write($stat);
-        }
-        else {
-            $units = $unitDao->getAll();
-            if($units === null) {
-                $units = array();
-            }
-            $unit = $unitDao->get($name);
-
-            LayoutView::set_layout('layout/statistic.tpl.php');
-            $app->render('statistics/view.tpl.php', array('units' => $units, 'unit' => $unit, 'start_date' => $start_date, 'error' => 'not_found'));
-        }
+        
     }
     else {
-        if($res = $statisticDao->getStatistic($name, $start_date, $end_date, $statistic_show)) {
-            $clicksArray = array();
-            $showsArray = array();
-            $shows_sum = 0;
-            $clicks_sum = 0;
-            foreach($res as $r) {
-                if(isset($r['shows'])) {
-                    $showsArray[] = '["'.$r['date'].'",'.$r['shows'].']';
-                    $shows_sum += $r['shows'];
-                }
-                if(isset($r['clicks'])) {
-                    $clicksArray[] = '["'.$r['date'].'",'.$r['clicks'].']';
-                    $clicks_sum += $r['clicks'];
-                }
-            }
-            $shows = join(',',$showsArray);
-            $clicks = join(',',$clicksArray);
-            $stat=array('shows'=>$shows, 'clicks'=>$clicks, 'shows_sum'=>$shows_sum, 'clicks_sum'=>$clicks_sum);
-        
-            $units = $unitDao->getAll();
-            if($units === null) {
-                $units = array();
-            }
-            
             LayoutView::set_layout('layout/statistic.tpl.php');
-            $app->render('statistics/stat.tpl.php', array('stat' => $stat, 'units' => $units, 'statistic_show' => $statistic_show));    
-        }
-        else {
-            $units = $unitDao->getAll();
-            if($units === null) {
-                $units = array();
-            }
-            $unit = $unitDao->get($name);
-
-            LayoutView::set_layout('layout/statistic.tpl.php');
-            $app->render('statistics/view.tpl.php', array('units' => $units, 'unit' => $unit, 'start_date' => $start_date, 'error' => 'not_found'));
-        }
+            $app->render('statistics/stat.tpl.php', array('res' => $res, 'units' => $units, 'statistic_show' => $statistic_show));    
     }
 });
 

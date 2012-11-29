@@ -11,12 +11,12 @@ class ValidationService {
         $errors->type = !$this->checkType($unit->type);
         $errors->title = !$this->checkTitle($unit->title);
         $errors->weight = !$this->checkWeight($unit->weight);
-        if($unit->type=='image') {
+        if($unit->type == 'image') {
             $errors->link = !$this->checkLink($unit->link);
             $errors->imageUrl = !$this->checkImageUrl($unit->imageUrl, $type);
             $errors->html = false;
         }
-        else if($unit->type=='html') {
+        else if($unit->type == 'html') {
             $errors->link = false;
             $errors->imageUrl = false;
             $errors->html = !$this->checkHtml($unit->html);
@@ -63,17 +63,11 @@ class ValidationService {
     }
 
      public function checkClicksLimit($clicks_limit) {
-        if($clicks_limit == null) 
-            return true;
-        else 
-            return filter_var($clicks_limit, FILTER_VALIDATE_INT) !== false && $clicks_limit > 0;
+        return ($clicks_limit === null) || (filter_var($clicks_limit, FILTER_VALIDATE_INT) !== false && $clicks_limit > 0);
     }
 
      public function checkShowsLimit($shows_limit) {
-        if($shows_limit == null) 
-            return true;
-        else 
-            return filter_var($shows_limit, FILTER_VALIDATE_INT) !== false && $shows_limit > 0;
+        return ($shows_limit === null) || (filter_var($shows_limit, FILTER_VALIDATE_INT) !== false && $shows_limit > 0);
     }
 
     public function checkTimeLimit($time_limit) {
@@ -81,21 +75,7 @@ class ValidationService {
     }
 
     public function checkImageUrl($url, $type) {
-        if($type == 'update' && (($url == '' && isset($_FILES['imageUrl']) && $_FILES["imageUrl"]["tmp_name"]=='') || ($url == '' && !isset($_FILES['imageUrl'])))) return true;
-		if(isset($_FILES['imageUrl'])) {
-            if($_FILES['imageUrl']['error'] == 0) {
-                $imageinfo = getimagesize($_FILES["imageUrl"]["tmp_name"]);
-                if($imageinfo["mime"] != "image/gif" && $imageinfo["mime"] != "image/jpeg" && $imageinfo["mime"] !="image/png") {
-                    return false;
-                }
-                else 
-                    return true;
-            }
-            else 
-                return false;
-        }
-		else 
-			return $url != '' && filter_var($url, FILTER_VALIDATE_URL) != false;
+        return (isset($_FILES['imageUrl'])) || ($type == 'update' && $url == '') || ($url != '' && filter_var($url, FILTER_VALIDATE_URL) != false);
     }
 
     public function checkHtml($html) {

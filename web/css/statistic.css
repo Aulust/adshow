@@ -1,10 +1,9 @@
-#holder_clicks {
-    height: 290px;
-    width: 1120px;
-    background-color: #333333;
+.statisticImage {
+  max-width: 100px;
+  max-height: 100px;
 }
-#holder_shows {
-    height: 290px;
-    width: 1120px;
-    background-color: #333333;
+
+.statistics {
+  height: 300px;
+  width: 100%;
 }
