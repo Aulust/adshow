@@ -66,8 +66,24 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
         
     }
     else {
-            LayoutView::set_layout('layout/statistic.tpl.php');
-            $app->render('statistics/stat.tpl.php', array('res' => $res, 'units' => $units, 'statistic_show' => $statistic_show));    
+        $clicksArray = array();
+        $showsArray = array();
+        $shows_sum = 0;
+        $clicks_sum = 0;
+        foreach($res as $r) {
+            if(isset($r['shows'])) {
+                $showsArray[] = array($r['date'], $r['shows']);
+                $shows_sum += $r['shows'];
+            }
+            if(isset($r['clicks'])) {
+                $clicksArray[] = array($r['date'], $r['clicks']);
+                $clicks_sum += $r['clicks'];
+            }
+        }
+        $stat=array('shows'=>$showsArray, 'clicks'=>$clicksArray, 'shows_sum'=>$shows_sum, 'clicks_sum'=>$clicks_sum);
+
+        LayoutView::set_layout('layout/statistic.tpl.php');
+        $app->render('statistics/stat.tpl.php', array('stat' => $stat, 'units' => $units, 'statistic_show' => $statistic_show));    
     }
 });
 
