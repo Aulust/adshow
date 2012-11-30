@@ -68,12 +68,7 @@ var routers = [
     {'pattern': /\/click\/([a-zA-Z0-9.]+)/, 'controller': function(res, unitId) {
         var result = engine.getLink(unitId);
         if(result) {
-            res.writeHead(302, {
-                'Location': result,
-                'Expires': '0',
-                'Cache-Control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
-                'Pragma': 'no-cache'
-            });
+            res.writeHead(301, {'Location': result});
             res.end();
         } else {
             notFound(res);
