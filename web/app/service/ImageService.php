@@ -14,7 +14,7 @@ class ImageService {
             return $imageUrl;
         }
         else {
-            return false;
+            return null;
         }
     }
     

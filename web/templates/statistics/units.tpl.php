@@ -14,7 +14,7 @@
     <tbody>
       <? foreach($units as $availableUnit) : ?>
       <tr>
-        <td><?= $availableUnit->type == 'image' ? '<img class="statisticImage" src="' .$availableUnit->image_url. '">' : '' ?></td>
+        <td><?= $availableUnit->type == 'image' ? '<img class="statisticImage" src="' .$availableUnit->imageUrl. '">' : '' ?></td>
         <td><?= $availableUnit->name ?></td>
         <td><a href="/statistics/<?= $availableUnit->name ?>" class="btn btn-mini"><i class="icon-camera"></i>OPEN</a></td>
       </tr>

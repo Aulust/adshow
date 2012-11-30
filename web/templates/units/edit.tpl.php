@@ -38,29 +38,29 @@
           <p class="help-block">Unit weight. Number between 1 and 100.</p>
         </div>
       </div>
-      <div class="control-group <?= isset($errors) && $errors->shows_limit ? 'error' : '' ?>">
+      <div class="control-group <?= isset($errors) && $errors->showsLimit ? 'error' : '' ?>">
         <label for="title" class="control-label">Shows limit</label>
         <div class="controls">
-          <input type="text" name="shows_limit" id="shows_limit" class="input-xlarge" value="<?= htmlspecialchars($unit->shows_limit) ?>">
+          <input type="text" name="showsLimit" id="showsLimit" class="input-xlarge" value="<?= htmlspecialchars($unit->showsLimit) ?>">
           <p class="help-block">Shows  limit.</p>
         </div>
       </div>
-      <div class="control-group <?= isset($errors) && $errors->clicks_limit ? 'error' : '' ?>">
+      <div class="control-group <?= isset($errors) && $errors->clicksLimit ? 'error' : '' ?>">
         <label for="title" class="control-label">Clicks limit</label>
         <div class="controls">
-          <input type="text" name="clicks_limit" id="clicks_limit" class="input-xlarge" value="<?= htmlspecialchars($unit->clicks_limit) ?>">
+          <input type="text" name="clicksLimit" id="clicksLimit" class="input-xlarge" value="<?= htmlspecialchars($unit->clicksLimit) ?>">
           <p class="help-block">Clicks limit.</p>
         </div>
       </div>
-      <div class="control-group <?= isset($errors) && $errors->time_limit ? 'error' : '' ?>">
+      <div class="control-group <?= isset($errors) && $errors->timeLimit ? 'error' : '' ?>">
         <label for="title" class="control-label">Time limit</label>
         <div class="controls">
-          <input type="text" name="time_limit" id="time_limit" class="input-xlarge" value="<?= htmlspecialchars($unit->time_limit) ?>">
+          <input type="text" name="timeLimit" id="timeLimit" class="input-xlarge" value="<?= htmlspecialchars($unit->timeLimit) ?>">
           <p class="help-block">Time limit.</p>
         </div>
       </div>
 	  
-      <div id="unit_link_div" class="control-group <?= $unit->type == 'html' ? 'hidden ' : '' ?><?= isset($errors) && $errors->link ? 'error' : '' ?>">
+      <div id="unitLinkDiv" class="control-group <?= $unit->type == 'html' ? 'hidden ' : '' ?><?= isset($errors) && $errors->link ? 'error' : '' ?>">
         <label for="link" class="control-label">Link</label>
         <div class="controls">
           <input type="text" name="link" id="link" class="input-xlarge" value="<?= htmlspecialchars($unit->link) ?>">
@@ -68,7 +68,7 @@
         </div>
       </div>
       <hr/>
-      <div id="unit_image_div" class="control-group <?= $unit->type == 'html' ? 'hidden ' : '' ?><?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
+      <div id="unitImageDiv" class="control-group <?= $unit->type == 'html' ? 'hidden ' : '' ?><?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
         <label for="imageUrl" class="control-label">Image file</label>
         <div class="controls">
           <input type="file" name="imageUrl" id="imageUrl" class="input-xlarge">
@@ -77,7 +77,7 @@
         </div>
       </div>
 	  
-      <div id="unit_html_div" class="control-group <?= ($unit->type == 'image' ||  ($action == 'create' && $unit->type==''))? 'hidden ' : '' ?><?= isset($errors) && $errors->html ? 'error' : '' ?>">
+      <div id="unitHtmlDiv" class="control-group <?= ($unit->type == 'image' ||  ($action == 'create' && $unit->type==''))? 'hidden ' : '' ?><?= isset($errors) && $errors->html ? 'error' : '' ?>">
         <label for="html" class="control-label">Html code</label>
         <div class="controls">
           <textarea rows="3" name="html" id="html" class="input-xlarge"><?= htmlspecialchars($unit->html) ?></textarea>

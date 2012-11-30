@@ -1,6 +1,6 @@
 function printStatistics(shows, clicks){
     if(shows) {
-        var shows = $.jqplot('stat_shows', [shows], {
+        var shows = $.jqplot('statShows', [shows], {
             title:'Shows statistics',
             axes:{
                 xaxis:{
@@ -27,7 +27,7 @@ function printStatistics(shows, clicks){
         });
     } 
     if(clicks) {
-        var clicks = $.jqplot('stat_clicks', [clicks], {
+        var clicks = $.jqplot('statClicks', [clicks], {
             title:'Clicks statistics',
             axes:{
                 xaxis:{

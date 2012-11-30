@@ -24,7 +24,7 @@
         <td><?= $availableUnit->type ?></td>
         <td><?= $availableUnit->shows ?></td>
         <td><?= $availableUnit->clicks ?></td>
-        <td><?= ($availableUnit->time_limit == null ? 'No' : $availableUnit->time_limit) ?></td>
+        <td><?= ($availableUnit->timeLimit == null ? 'No' : $availableUnit->timeLimit) ?></td>
         <td class="unit-<?= $availableUnit->status ?>"><?= $availableUnit->status ?></td>
         <td>
           <a href="/units/<?= $availableUnit->name ?>" class="btn btn-mini"><i class="icon-play"></i>View</a>

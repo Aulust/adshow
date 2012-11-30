@@ -10,13 +10,13 @@
     <dt>Shows</dt>
     <dd><?= $unit->shows ?></dd>
     <dt>Shows limit</dt>
-    <dd><?= $unit->shows_limit ?></dd>
+    <dd><?= $unit->showsLimit ? $unit->showsLimit : 'No' ?></dd>
     <dt>Clicks</dt>
     <dd><?= $unit->clicks ?></dd>
     <dt>Clicks limit</dt>
-    <dd><?= $unit->clicks_limit ?></dd>
+    <dd><?= $unit->clicksLimit ? $unit->clicksLimit : 'No' ?></dd>
     <dt>Time limit</dt>
-    <dd><?= $unit->time_limit == null ? 'No' : $unit->time_limit ?></dd>
+    <dd><?= $unit->timeLimit == null ? 'No' : $unit->timeLimit ?></dd>
     <dt>Status</dt>
     <dd class="unit-<?= $unit->status ?>"><?= $unit->status ?></dd>
     <? if($unit->type == 'image') : ?>

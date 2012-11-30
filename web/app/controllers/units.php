@@ -63,26 +63,26 @@ $app->post('/add/unit', function () use($app, $unitDao, $validationService, $per
     $unit->type = isset($_POST['type']) ? $_POST['type'] : '';
     $unit->title = isset($_POST['title']) ? $_POST['title'] : '';
     $unit->weight = isset($_POST['weight']) ? $_POST['weight'] : 0;
-    $unit->shows_limit = (int)$_POST['shows_limit'] > 0 ? $_POST['shows_limit'] : NULL;
-    $unit->clicks_limit = (int)$_POST['clicks_limit'] > 0 ? $_POST['clicks_limit'] : NULL;
-    $unit->time_limit = strtotime($_POST['time_limit']);
-    if($unit->time_limit == false) 
-        $unit->time_limit = NULL;
+    $unit->showsLimit = (int)$_POST['showsLimit'] > 0 ? $_POST['showsLimit'] : NULL;
+    $unit->clicksLimit = (int)$_POST['clicksLimit'] > 0 ? $_POST['clicksLimit'] : NULL;
+    $unit->timeLimit = strtotime($_POST['timeLimit']);
+    if($unit->timeLimit == false) 
+        $unit->timeLimit = NULL;
     else 
-        $unit->time_limit = date('Y-m-d', $unit->time_limit);
+        $unit->timeLimit = date('Y-m-d', $unit->timeLimit);
     $unit->link = isset($_POST['link']) ? $_POST['link'] : '';
     $unit->imageUrl = isset($_POST['imageUrl']) ? $_POST['imageUrl'] : '';
     if($unit->imageUrl)
-        $unit->image_type = 'remote';
+        $unit->imageType = 'remote';
     else 
-        $unit->image_type = 'local';
+        $unit->imageType = 'local';
     $unit->html = isset($_POST['html']) ? $_POST['html'] : '';
 
     $token = isset($_POST['token']) ? $_POST['token'] : '';
 
     $errors = $validationService->validateUnit($unit, $token, 'insert');
 
-    if($unit->image_type == 'local') {
+    if($unit->imageType == 'local') {
         $errors->imageUrl = !$imageService->checkImage();
     }
 
@@ -98,9 +98,9 @@ $app->post('/add/unit', function () use($app, $unitDao, $validationService, $per
         $app->render('units/edit.tpl.php', array('availableUnits' => $availableUnits, 'action' => 'create',
             'unit' => $unit, 'token' => $token, 'errors' => $errors));
     } else {
-        if($unit->image_type == 'local') {
+        if($unit->imageType == 'local') {
             $unit->imageUrl = $imageService->uploadImage($unit->name);
-            if($unit->imageUrl == false) {
+            if($unit->imageUrl === null) {
                 $app->error();
             }
         }
@@ -150,25 +150,25 @@ $app->post('/units/:name/edit', function ($name) use($app, $unitDao, $validation
     $unit->title = isset($_POST['title']) ? $_POST['title'] : '';
     $unit->weight = isset($_POST['weight']) ? $_POST['weight'] : 0;
     $unit->link = isset($_POST['link']) ? $_POST['link'] : '';
-    $unit->shows_limit = (int)$_POST['shows_limit'] > 0 ? $_POST['shows_limit'] : NULL;
-    $unit->clicks_limit = (int)$_POST['clicks_limit'] > 0 ? $_POST['clicks_limit'] : NULL;
-    $unit->time_limit = strtotime($_POST['time_limit']);
-    if($unit->time_limit == false) 
-        $unit->time_limit = NULL;
+    $unit->showsLimit = (int)$_POST['showsLimit'] > 0 ? $_POST['showsLimit'] : NULL;
+    $unit->clicksLimit = (int)$_POST['clicksLimit'] > 0 ? $_POST['clicksLimit'] : NULL;
+    $unit->timeLimit = strtotime($_POST['timeLimit']);
+    if($unit->timeLimit == false) 
+        $unit->timeLimit = NULL;
     else 
-        $unit->time_limit = date('Y-m-d', $unit->time_limit);
+        $unit->timeLimit = date('Y-m-d', $unit->timeLimit);
     $unit->imageUrl = isset($_POST['imageUrl']) ? $_POST['imageUrl'] : '';
     if($unit->imageUrl)
-        $unit->image_type = 'remote';
+        $unit->imageType = 'remote';
     else 
-        $unit->image_type = 'local';
+        $unit->imageType = 'local';
     $unit->html = isset($_POST['html']) ? $_POST['html'] : '';
 
     $token = isset($_POST['token']) ? $_POST['token'] : '';
     
     $errors = $validationService->validateUnit($unit, $token, 'update');
     
-    if($unit->image_type == 'local' && isset($_FILES['imageUrl']) && $_FILES["imageUrl"]["tmp_name"]!='') {
+    if($unit->imageType == 'local' && isset($_FILES['imageUrl']) && $_FILES["imageUrl"]["tmp_name"]!='') {
         $errors->imageUrl = !$imageService->checkImage();
     }
     
@@ -184,9 +184,9 @@ $app->post('/units/:name/edit', function ($name) use($app, $unitDao, $validation
         $app->render('units/edit.tpl.php', array('availableUnits' => $availableUnits, 'action' => 'edit',
             'unit' => $unit, 'token' => $token, 'errors' => $errors));
     } else {
-        if($unit->image_type == 'local' && isset($_FILES['imageUrl']) && $_FILES["imageUrl"]["tmp_name"]!='') {
+        if($unit->imageType == 'local' && isset($_FILES['imageUrl']) && $_FILES["imageUrl"]["tmp_name"]!='') {
             $unit->imageUrl = $imageService->uploadImage($unit->name);
-            if($unit->imageUrl == false) {
+            if($unit->imageUrl === null) {
                 $app->error();
             }
         }

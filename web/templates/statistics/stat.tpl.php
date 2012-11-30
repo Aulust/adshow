@@ -1,10 +1,10 @@
-<? if($statistic_show == 'all' || $statistic_show == 'shows'):?>
-    <div id="stat_shows" class="statistics"></div>
-    <div>Shows: <?= $stat['shows_sum'];?></div>
+<? if($statisticShow == 'all' || $statisticShow == 'shows'):?>
+    <div id="statShows" class="statistics"></div>
+    <div>Shows: <?= $stat['showsSum'];?></div>
 <? endif ?>
-<? if($statistic_show == 'all' || $statistic_show == 'clicks'):?>
-    <div id="stat_clicks" class="statistics"></div>
-    <div>Clicks: <?= $stat['clicks_sum'];?></div>
+<? if($statisticShow == 'all' || $statisticShow == 'clicks'):?>
+    <div id="statClicks" class="statistics"></div>
+    <div>Clicks: <?= $stat['clicksSum'];?></div>
 <? endif ?>
 <script>
     var shows = <?= $stat['shows'] ? json_encode($stat['shows'], JSON_NUMERIC_CHECK) : 'null' ?>;

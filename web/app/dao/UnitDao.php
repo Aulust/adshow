@@ -11,7 +11,7 @@ class UnitDao {
 
     public function getAll() {
         try {
-            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, title, type, time_limit, status, shows, clicks, image_url
+            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, title, type, time_limit as timeLimit, status, shows, clicks, image_url as imageUrl
                                         FROM unit INNER JOIN statistics_cache ON unit.unit_name = statistics_cache.unit_name
                                         WHERE status <> "delete"');
             $sth->execute();
@@ -26,7 +26,7 @@ class UnitDao {
     public function get($name) {
         try {
             $sth = $this->dbh->prepare('SELECT unit.unit_name as name, type, title, weight, link, image_url as imageUrl,
-                                        html, shows_limit, clicks_limit, time_limit, status, shows, clicks
+                                        html, shows_limit as showsLimit, clicks_limit as clicksLimit, time_limit as timeLimit, status, shows, clicks
                                         FROM unit INNER JOIN statistics_cache ON unit.unit_name = statistics_cache.unit_name
                                         WHERE unit.unit_name = :name');
 
@@ -55,20 +55,20 @@ class UnitDao {
 
     public function update($unit) {
         try {
-            $sth = $this->dbh->prepare('UPDATE unit SET title = :title, weight = :weight, shows_limit = :shows_limit,
-                                        clicks_limit = :clicks_limit, time_limit = :time_limit, link = :link, status = "active",
-                                        html = :html' . ($unit->imageUrl ? ', image_url = :image_url, image_type = :image_type' : '') . ' WHERE unit_name = :name');
+            $sth = $this->dbh->prepare('UPDATE unit SET title = :title, weight = :weight, shows_limit = :showsLimit,
+                                        clicks_limit = :clicksLimit, time_limit = :timeLimit, link = :link, status = "active",
+                                        html = :html' . ($unit->imageUrl ? ', image_url = :imageUrl, image_type = :imageType' : '') . ' WHERE unit_name = :name');
 
             $sth->bindParam(':title', $unit->title, PDO::PARAM_STR);
             $sth->bindParam(':weight', $unit->weight, PDO::PARAM_INT);
-            $sth->bindParam(':shows_limit', $unit->shows_limit, PDO::PARAM_INT);
-            $sth->bindParam(':clicks_limit', $unit->clicks_limit, PDO::PARAM_INT);
-            $sth->bindParam(':time_limit', $unit->time_limit, PDO::PARAM_STR);
+            $sth->bindParam(':showsLimit', $unit->showsLimit, PDO::PARAM_INT);
+            $sth->bindParam(':clicksLimit', $unit->clicksLimit, PDO::PARAM_INT);
+            $sth->bindParam(':timeLimit', $unit->timeLimit, PDO::PARAM_STR);
             $sth->bindParam(':link', $unit->link, PDO::PARAM_STR);
             
             if ($unit->imageUrl) {
-                $sth->bindParam(':image_url', $unit->imageUrl, PDO::PARAM_STR);
-                $sth->bindParam(':image_type', $unit->image_type, PDO::PARAM_STR);
+                $sth->bindParam(':imageUrl', $unit->imageUrl, PDO::PARAM_STR);
+                $sth->bindParam(':imageType', $unit->imageType, PDO::PARAM_STR);
             }
             
             $sth->bindParam(':html', $unit->html, PDO::PARAM_STR);
@@ -83,21 +83,21 @@ class UnitDao {
     public function insert($unit) {
         try {
             $sth = $this->dbh->prepare('INSERT INTO unit SET unit_name = :name, type = :type, title = :title,
-                                        weight = :weight, shows_limit = :shows_limit, clicks_limit = :clicks_limit,
-                                        time_limit = :time_limit, link = :link, status = "active",
-                                        image_url = :image_url, image_type = :image_type, html = :html;
+                                        weight = :weight, shows_limit = :showsLimit, clicks_limit = :clicksLimit,
+                                        time_limit = :timeLimit, link = :link, status = "active",
+                                        image_url = :imageUrl, image_type = :imageType, html = :html;
                                         INSERT INTO statistics_cache SET unit_name = :name;');
 
             $sth->bindParam(':name', $unit->name, PDO::PARAM_STR);
             $sth->bindParam(':type', $unit->type, PDO::PARAM_STR);
             $sth->bindParam(':title', $unit->title, PDO::PARAM_STR);
             $sth->bindParam(':weight', $unit->weight, PDO::PARAM_INT);
-            $sth->bindParam(':shows_limit', $unit->shows_limit, PDO::PARAM_INT);
-            $sth->bindParam(':clicks_limit', $unit->clicks_limit, PDO::PARAM_INT);
-            $sth->bindParam(':time_limit', $unit->time_limit, PDO::PARAM_STR);
+            $sth->bindParam(':showsLimit', $unit->showsLimit, PDO::PARAM_INT);
+            $sth->bindParam(':clicksLimit', $unit->clicksLimit, PDO::PARAM_INT);
+            $sth->bindParam(':timeLimit', $unit->timeLimit, PDO::PARAM_STR);
             $sth->bindParam(':link', $unit->link, PDO::PARAM_STR);
-            $sth->bindParam(':image_url', $unit->imageUrl, PDO::PARAM_STR);
-            $sth->bindParam(':image_type', $unit->image_type, PDO::PARAM_STR);
+            $sth->bindParam(':imageUrl', $unit->imageUrl, PDO::PARAM_STR);
+            $sth->bindParam(':imageType', $unit->imageType, PDO::PARAM_STR);
             $sth->bindParam(':html', $unit->html, PDO::PARAM_STR);
             $sth->execute();
         } catch(PDOException $e) {

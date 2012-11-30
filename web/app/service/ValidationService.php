@@ -21,9 +21,9 @@ class ValidationService {
             $errors->imageUrl = false;
             $errors->html = !$this->checkHtml($unit->html);
         }
-        $errors->clicks_limit = !$this->checkClicksLimit($unit->clicks_limit);
-        $errors->shows_limit = !$this->checkShowsLimit($unit->shows_limit);
-        $errors->time_limit = !$this->checkTimeLimit($unit->time_limit);
+        $errors->clicksLimit = !$this->checkClicksLimit($unit->clicksLimit);
+        $errors->showsLimit = !$this->checkShowsLimit($unit->showsLimit);
+        $errors->timeLimit = !$this->checkTimeLimit($unit->timeLimit);
 
         $errors->token = !$this->checkToken(ValidationService::UNIT_FORM_TOKEN_NAME, $token);
 
@@ -62,15 +62,15 @@ class ValidationService {
         return $weight != '' && filter_var($weight, FILTER_VALIDATE_INT) != false && $weight >= 1 && $weight <= 100;
     }
 
-     public function checkClicksLimit($clicks_limit) {
-        return ($clicks_limit === null) || (filter_var($clicks_limit, FILTER_VALIDATE_INT) !== false && $clicks_limit > 0);
+     public function checkClicksLimit($clicksLimit) {
+        return ($clicksLimit === null) || (filter_var($clicksLimit, FILTER_VALIDATE_INT) !== false && $clicksLimit > 0);
     }
 
-     public function checkShowsLimit($shows_limit) {
-        return ($shows_limit === null) || (filter_var($shows_limit, FILTER_VALIDATE_INT) !== false && $shows_limit > 0);
+     public function checkShowsLimit($showsLimit) {
+        return ($showsLimit === null) || (filter_var($showsLimit, FILTER_VALIDATE_INT) !== false && $showsLimit > 0);
     }
 
-    public function checkTimeLimit($time_limit) {
+    public function checkTimeLimit($timeLimit) {
         return true;
     }
 

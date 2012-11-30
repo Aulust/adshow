@@ -20,13 +20,13 @@ class StatisticDao {
         return $date;
     }
     
-    public function getStatistic($name, $start_date, $end_date, $statistic_show) {
-        $stat_select = $this->getStatisticSelect($statistic_show);
+    public function getStatistic($name, $startDate, $endDate, $statisticShow) {
+        $statSelect = $this->getStatisticSelect($statisticShow);
         try {
-            $sth = $this->dbh->prepare("SELECT $stat_select FROM `statistics` WHERE `date`>=:start_date AND `date`<=:end_date AND unit_name=:name");
+            $sth = $this->dbh->prepare("SELECT $statSelect FROM `statistics` WHERE `date`>=:startDate AND `date`<=:endDate AND unit_name=:name");
             $sth->bindParam(':name', $name, PDO::PARAM_STR);
-            $sth->bindParam(':start_date', $start_date, PDO::PARAM_STR);
-            $sth->bindParam(':end_date', $end_date, PDO::PARAM_STR);
+            $sth->bindParam(':startDate', $startDate, PDO::PARAM_STR);
+            $sth->bindParam(':endDate', $endDate, PDO::PARAM_STR);
             $sth->execute();
             $res = $sth->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
@@ -36,8 +36,8 @@ class StatisticDao {
         return $res;
     }
     
-    public function getStatisticSelect($statistic_show) {
-        switch ($statistic_show) {
+    public function getStatisticSelect($statisticShow) {
+        switch ($statisticShow) {
             case 'all': $fetch = array('date', 'shows', 'clicks'); break;
             case 'shows': $fetch = array('date', 'shows'); break;
             case 'clicks': $fetch = array('date', 'clicks'); break;
