@@ -1,0 +1,9 @@
+.statisticImage {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.statistics {
+  height: 300px;
+  width: 100%;
+}
