@@ -16,7 +16,7 @@
   </div>
   <div class="span4">
     <h2>Statistics</h2>
-    <p>View and download statistics</p>
-    <p><a class="btn" href="/statistics">View statistics &raquo;</a></p>
+    <p>To be done...</p>
+    <p><a class="btn" href="/">View statistics &raquo;</a></p>
   </div>
 </div>

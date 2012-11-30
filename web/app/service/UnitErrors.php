@@ -10,9 +10,9 @@ class UnitErrors {
     public $html;
     public $token;
 
-    public function hasErrors($unit) {
+    public function hasErrors() {
         if($this->name || $this->type || $this->title || $this->weight || $this->link || $this->token ||
-            $this->html || $this->imageUrl) {
+            ($this->type === 'html' && $this->html) || ($this->type === 'image' && $this->imageUrl)) {
             return true;
         }
 

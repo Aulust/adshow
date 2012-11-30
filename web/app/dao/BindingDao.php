@@ -23,7 +23,7 @@ class BindingDao {
 
     public function getUnitsByPlacement($placement) {
         try {
-            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, type, title, weight, link, image_url as imageUrl, html, status
+            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, type, title, weight, link, image_url as imageUrl, html
                                         FROM unit INNER JOIN bindings ON unit.unit_name = bindings.unit_name
                                         WHERE placement_name = :name');
 

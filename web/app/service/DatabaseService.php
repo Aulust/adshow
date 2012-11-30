@@ -2,8 +2,10 @@
 
 class DatabaseService {
     private $dbh;
-    
-    public function DatabaseService($config) {        
+
+    public function DatabaseService() {
+        $config = parse_ini_file('../config/config');
+
         $dbhost = $config['dbhost'];
         $dbuser = $config['dbuser'];
         $dbpass = $config['dbpass'];

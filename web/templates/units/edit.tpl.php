@@ -1,5 +1,5 @@
 <div class="row-fluid">
-  <form class="form-horizontal" method="post" enctype="multipart/form-data">
+  <form class="form-horizontal" method="post">
     <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
     <fieldset>
@@ -16,9 +16,9 @@
         <div class="control-group <?= isset($errors) && $errors->type ? 'error' : '' ?>">
           <label for="type" class="control-label">Unit type</label>
           <div class="controls">
-            <select name="type" id="unitType">
-              <option value="image">Image unit</option>
-              <option value="html" <?= $unit->type=='html' ? 'selected="selected"' : '' ?>>Html unit</option>
+            <select name="type" id="type">
+              <option value="image" selected="selected">Image unit</option>
+              <option value="html" selected="">Html unit</option>
             </select>
             <p class="help-block">Unit type. Can't be changed.</p>
           </div>
@@ -38,29 +38,7 @@
           <p class="help-block">Unit weight. Number between 1 and 100.</p>
         </div>
       </div>
-      <div class="control-group <?= isset($errors) && $errors->showsLimit ? 'error' : '' ?>">
-        <label for="title" class="control-label">Shows limit</label>
-        <div class="controls">
-          <input type="text" name="showsLimit" id="showsLimit" class="input-xlarge" value="<?= htmlspecialchars($unit->showsLimit) ?>">
-          <p class="help-block">Shows  limit.</p>
-        </div>
-      </div>
-      <div class="control-group <?= isset($errors) && $errors->clicksLimit ? 'error' : '' ?>">
-        <label for="title" class="control-label">Clicks limit</label>
-        <div class="controls">
-          <input type="text" name="clicksLimit" id="clicksLimit" class="input-xlarge" value="<?= htmlspecialchars($unit->clicksLimit) ?>">
-          <p class="help-block">Clicks limit.</p>
-        </div>
-      </div>
-      <div class="control-group <?= isset($errors) && $errors->timeLimit ? 'error' : '' ?>">
-        <label for="title" class="control-label">Time limit</label>
-        <div class="controls">
-          <input type="text" name="timeLimit" id="timeLimit" class="input-xlarge" value="<?= htmlspecialchars($unit->timeLimit) ?>">
-          <p class="help-block">Time limit.</p>
-        </div>
-      </div>
-	  
-      <div id="unitLinkDiv" class="control-group <?= $unit->type == 'html' ? 'hidden ' : '' ?><?= isset($errors) && $errors->link ? 'error' : '' ?>">
+      <div class="control-group <?= isset($errors) && $errors->link ? 'error' : '' ?>">
         <label for="link" class="control-label">Link</label>
         <div class="controls">
           <input type="text" name="link" id="link" class="input-xlarge" value="<?= htmlspecialchars($unit->link) ?>">
@@ -68,16 +46,14 @@
         </div>
       </div>
       <hr/>
-      <div id="unitImageDiv" class="control-group <?= $unit->type == 'html' ? 'hidden ' : '' ?><?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
-        <label for="imageUrl" class="control-label">Image file</label>
+      <div class="control-group <?= isset($errors) && $errors->imageUrl ? 'error' : '' ?>">
+        <label for="imageUrl" class="control-label">Image url</label>
         <div class="controls">
-          <input type="file" name="imageUrl" id="imageUrl" class="input-xlarge">
-		  <input type="button" id="changeTypeBtn" value="Change type">
-          <p class="help-block">Unit image. Upload file or type full url link to image.</p>
+          <input type="text" name="imageUrl" id="imageUrl" class="input-xlarge" value="<?= htmlspecialchars($unit->imageUrl) ?>">
+          <p class="help-block">Url for unit image.</p>
         </div>
       </div>
-	  
-      <div id="unitHtmlDiv" class="control-group <?= ($unit->type == 'image' ||  ($action == 'create' && $unit->type==''))? 'hidden ' : '' ?><?= isset($errors) && $errors->html ? 'error' : '' ?>">
+      <div class="control-group <?= isset($errors) && $errors->html ? 'error' : '' ?>">
         <label for="html" class="control-label">Html code</label>
         <div class="controls">
           <textarea rows="3" name="html" id="html" class="input-xlarge"><?= htmlspecialchars($unit->html) ?></textarea>

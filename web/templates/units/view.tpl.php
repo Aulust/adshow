@@ -7,18 +7,7 @@
     <dd><?= $unit->name ?></dd>
     <dt>Type</dt>
     <dd><?= $unit->type ?></dd>
-    <dt>Shows</dt>
-    <dd><?= $unit->shows ?></dd>
-    <dt>Shows limit</dt>
-    <dd><?= $unit->showsLimit ? $unit->showsLimit : 'No' ?></dd>
-    <dt>Clicks</dt>
-    <dd><?= $unit->clicks ?></dd>
-    <dt>Clicks limit</dt>
-    <dd><?= $unit->clicksLimit ? $unit->clicksLimit : 'No' ?></dd>
-    <dt>Time limit</dt>
-    <dd><?= $unit->timeLimit == null ? 'No' : $unit->timeLimit ?></dd>
-    <dt>Status</dt>
-    <dd class="unit-<?= $unit->status ?>"><?= $unit->status ?></dd>
+
     <? if($unit->type == 'image') : ?>
     <dt>Link</dt>
     <dd><a href="<?= $unit->link ?>"><?= $unit->link ?></a></dd>

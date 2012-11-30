@@ -2790,22 +2790,6 @@ button.close {
   filter: progid:dximagetransform.microsoft.gradient(enabled=false);
 }
 
-.btn-activate {
-  background-color: #4fda49;
-  *background-color: #36bd2f;
-  background-image: -ms-linear-gradient(top, #5fee5b, #36bd2f);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5fee5b), to(#36bd2f));
-  background-image: -webkit-linear-gradient(top, #5fee5b, #36bd2f);
-  background-image: -o-linear-gradient(top, #5fee5b, #36bd2f);
-  background-image: -moz-linear-gradient(top, #5fee5b, #36bd2f);
-  background-image: linear-gradient(top, #5fee5b, #36bd2f);
-  background-repeat: repeat-x;
-  border-color: #36bd2f #36bd2f #248020;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#5fee5b', endColorstr='#36bd2f', GradientType=0);
-  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
-}
-
 .btn-danger:hover,
 .btn-danger:active,
 .btn-danger.active,
