@@ -3,7 +3,7 @@
 class PlacementDao {
     private $dbh;
 
-    public function PlacementDao($dbh) {
+    public function __construct($dbh) {
         $this->dbh = $dbh;
     }
 

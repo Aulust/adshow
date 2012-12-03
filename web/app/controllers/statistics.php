@@ -34,6 +34,7 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
     if(!$permissionsService->checkPermission('view statistics')) {
         $app->notFound();
     }
+
     $startDate = date("Y-m-d",strtotime($_POST['startDate']));
     $endDate = strtotime($_POST['endDate']);
     if($endDate == false)
@@ -41,12 +42,12 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
     else 
         $endDate = date("Y-m-d", $endDate);
     $statisticShow = $_POST['statisticShow'];
- 
+
     $units = $unitDao->getAll();
     if($units === null) {
         $app->error();
     }
-            
+
     if(!$res = $statisticDao->getStatistic($name, $startDate, $endDate, $statisticShow)) {
         $unit = $unitDao->get($name);
         LayoutView::set_layout('layout/statistic.tpl.php');
@@ -59,11 +60,10 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
             $statArray[] = join(',', $r);
         }
         $stat = join("\r\n", $statArray);
-            
+
         $res = $app->response();
         $res['Content-Type'] = 'application/CSV';
         $res->write($stat);
-        
     } else {
         $clicksArray = array();
         $showsArray = array();
@@ -85,4 +85,3 @@ $app->post('/statistics/:name', function ($name) use($app, $unitDao, $statisticD
         $app->render('statistics/stat.tpl.php', array('stat' => $stat, 'units' => $units, 'statisticShow' => $statisticShow));    
     }
 });
-

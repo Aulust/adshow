@@ -8,11 +8,11 @@
     <dt>Type</dt>
     <dd><?= $unit->type ?></dd>
     <dt>Shows</dt>
-    <dd><?= $unit->shows ?></dd>
+    <dd><?= $unit->shows !== null ? $unit->shows : 0 ?></dd>
     <dt>Shows limit</dt>
     <dd><?= $unit->showsLimit ? $unit->showsLimit : 'No' ?></dd>
     <dt>Clicks</dt>
-    <dd><?= $unit->clicks ?></dd>
+    <dd><?= $unit->clicks !== null ? $unit->clicks : 0 ?></dd>
     <dt>Clicks limit</dt>
     <dd><?= $unit->clicksLimit ? $unit->clicksLimit : 'No' ?></dd>
     <dt>Time limit</dt>

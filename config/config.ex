@@ -11,5 +11,4 @@ dbrefresh = 60000
 statisticsRefresh = 60000
 
 [Image Server]
-imageServer = http://adshow.local
-uploadDir = /img/adv/
+imageServer = http://adshow.local/

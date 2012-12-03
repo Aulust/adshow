@@ -11,6 +11,7 @@ class Unit {
     public $shows;
     public $clicks;
     public $link;
+    public $imageType;
     public $imageUrl;
     public $html;
 
@@ -23,6 +24,7 @@ class Unit {
         $this->clicksLimit = null;
         $this->timeLimit = null;
         $this->link = '';
+        $this->imageType = '';
         $this->imageUrl = null;
         $this->html = null;
     }

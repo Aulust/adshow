@@ -3,7 +3,7 @@
 class DatabaseService {
     private $dbh;
     
-    public function DatabaseService($config) {        
+    public function __construct($config) {
         $dbhost = $config['dbhost'];
         $dbuser = $config['dbuser'];
         $dbpass = $config['dbpass'];

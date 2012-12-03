@@ -3,7 +3,7 @@
 class BindingDao {
     private $dbh;
 
-    public function BindingDao($dbh) {
+    public function __construct($dbh) {
         $this->dbh = $dbh;
     }
 

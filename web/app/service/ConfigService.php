@@ -3,7 +3,7 @@
 class ConfigService {
     private $config;
     
-    public function ConfigService() {
+    public function __construct() {
         $this->config = parse_ini_file('../config/config');
     }
     

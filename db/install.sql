@@ -47,6 +47,11 @@ CREATE TABLE IF NOT EXISTS unit (
   PRIMARY KEY (unit_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS filename_sequence (
+  id INT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO filename_sequence VALUES (0);
+
 ALTER TABLE bindings
   ADD CONSTRAINT bindings_placement FOREIGN KEY (placement_name) REFERENCES placement (placement_name) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT bindings_unit FOREIGN KEY (unit_name) REFERENCES unit (unit_name) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -3,21 +3,25 @@
 class ValidationService {
     const UNIT_FORM_TOKEN_NAME = 'unit_form_token';
     const PLACEMENT_FORM_TOKEN_NAME = 'placement_form_token';
+    private $imageServer;
 
-    public function validateUnit($unit, $token, $type) {
+    public function __construct($config) {
+        $this->imageServer = $config['imageServer'];
+    }
+
+    public function validateUnit($unit, $token) {
         $errors = new UnitErrors();
 
         $errors->name = !$this->checkName($unit->name);
         $errors->type = !$this->checkType($unit->type);
         $errors->title = !$this->checkTitle($unit->title);
         $errors->weight = !$this->checkWeight($unit->weight);
+        $errors->link = !$this->checkLink($unit->link);
+        $errors->imageType =  !$this->checkImageType($unit->imageType);
         if($unit->type == 'image') {
-            $errors->link = !$this->checkLink($unit->link);
-            $errors->imageUrl = !$this->checkImageUrl($unit->imageUrl, $type);
+            $errors->imageUrl =  !$this->checkImageUrl($unit->imageUrl, $unit->imageType);
             $errors->html = false;
-        }
-        else if($unit->type == 'html') {
-            $errors->link = false;
+        } else if($unit->type == 'html') {
             $errors->imageUrl = false;
             $errors->html = !$this->checkHtml($unit->html);
         }
@@ -54,6 +58,10 @@ class ValidationService {
         return $type === 'html' || $type === 'image' ? true : false;
     }
 
+    public function checkImageType($type) {
+        return $type === 'remote' || $type === 'local' ? true : false;
+    }
+
     public function checkLink($link) {
         return $link != '' && filter_var($link, FILTER_VALIDATE_URL) != false;
     }
@@ -62,11 +70,11 @@ class ValidationService {
         return $weight != '' && filter_var($weight, FILTER_VALIDATE_INT) != false && $weight >= 1 && $weight <= 100;
     }
 
-     public function checkClicksLimit($clicksLimit) {
+    public function checkClicksLimit($clicksLimit) {
         return ($clicksLimit === null) || (filter_var($clicksLimit, FILTER_VALIDATE_INT) !== false && $clicksLimit > 0);
     }
 
-     public function checkShowsLimit($showsLimit) {
+    public function checkShowsLimit($showsLimit) {
         return ($showsLimit === null) || (filter_var($showsLimit, FILTER_VALIDATE_INT) !== false && $showsLimit > 0);
     }
 
@@ -75,7 +83,11 @@ class ValidationService {
     }
 
     public function checkImageUrl($url, $type) {
-        return (isset($_FILES['imageUrl'])) || ($type == 'update' && $url == '') || ($url != '' && filter_var($url, FILTER_VALIDATE_URL) != false);
+        if($type === 'local') {
+            $url = $this->imageServer . $url;
+        }
+
+        return $url !== '' && filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
 
     public function checkHtml($html) {

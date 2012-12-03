@@ -28,3 +28,12 @@
 .unit-delete {
     color: #4abd48
 }
+
+.color-red {
+    color: #B94A48;
+}
+
+.upload-progress {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
