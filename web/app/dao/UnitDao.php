@@ -11,9 +11,12 @@ class UnitDao {
 
     public function getAll() {
         try {
-            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, title, type, time_limit as timeLimit, status, shows, clicks, image_url as imageUrl
+            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, type, title, weight, link, status,
+                                        image_url as imageUrl, image_type as imageType, html,
+                                        shows_limit as showsLimit, clicks_limit as clicksLimit, time_limit as timeLimit, shows, clicks
                                         FROM unit LEFT JOIN statistics_cache ON unit.unit_name = statistics_cache.unit_name
                                         WHERE status <> "delete"');
+
             $sth->execute();
             $units = $sth->fetchAll(PDO::FETCH_CLASS, 'Unit');
 
@@ -25,8 +28,9 @@ class UnitDao {
 
     public function get($name) {
         try {
-            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, type, title, weight, link, image_url as imageUrl,
-                                        html, shows_limit as showsLimit, clicks_limit as clicksLimit, time_limit as timeLimit, status, shows, clicks
+            $sth = $this->dbh->prepare('SELECT unit.unit_name as name, type, title, weight, link, status,
+                                        image_url as imageUrl, image_type as imageType, html,
+                                        shows_limit as showsLimit, clicks_limit as clicksLimit, time_limit as timeLimit, shows, clicks
                                         FROM unit LEFT JOIN statistics_cache ON unit.unit_name = statistics_cache.unit_name
                                         WHERE unit.unit_name = :name');
 

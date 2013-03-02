@@ -14,7 +14,7 @@ $app->get('/units', function () use($app, $unitDao, $permissionsService) {
     $app->render('units/units.tpl.php', array('availableUnits' => $availableUnits));
 });
 
-$app->get('/units/:name', function ($name) use($app, $unitDao, $validationService, $permissionsService) {
+$app->get('/units/:name', function ($name) use($app, $unitDao, $validationService, $permissionsService, $configService) {
     if(!$validationService->checkName($name) || !$permissionsService->checkPermission('view units')) {
        $app->notFound();
     }
@@ -30,7 +30,7 @@ $app->get('/units/:name', function ($name) use($app, $unitDao, $validationServic
     }
 
     LayoutView::set_layout('layout/unit.tpl.php');
-    $app->render('units/view.tpl.php', array('availableUnits' => $availableUnits, 'unit' => $unit));
+    $app->render('units/view.tpl.php', array('availableUnits' => $availableUnits, 'unit' => $unit, 'config' => $configService->getConfig()));
 });
 
 $app->get('/add/unit', function () use($app, $unitDao, $validationService, $permissionsService) {

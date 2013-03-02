@@ -23,7 +23,7 @@
     <dt>Link</dt>
     <dd><a href="<?= $unit->link ?>"><?= $unit->link ?></a></dd>
     <dt>Image</dt>
-    <dd><img src="<?= $unit->imageUrl ?>"/></dd>
+    <dd><img src="<?= ($unit->imageType === 'local' ? $config['imageServer'] : '') . $unit->imageUrl ?>"/></dd>
     <? endif ?>
 
     <? if($unit->type == 'html') : ?>
